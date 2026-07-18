@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 
-from models import db
+from models import db, User
 from config import config
 
 
@@ -56,7 +56,7 @@ def create_app(config_name="production"):
 
 
     # --------------------------------------------------
-    # CORS Configuration
+    # CORS
     # --------------------------------------------------
 
     CORS(
@@ -94,7 +94,7 @@ def create_app(config_name="production"):
 
 
     # --------------------------------------------------
-    # Import Routes
+    # Routes
     # --------------------------------------------------
 
     from routes.auth import auth_bp
@@ -113,76 +113,19 @@ def create_app(config_name="production"):
     from routes.legacy_bot import legacy_bot_bp
 
 
-
-    # --------------------------------------------------
-    # Register Routes
-    # --------------------------------------------------
-
-    app.register_blueprint(
-        auth_bp,
-        url_prefix="/api/auth"
-    )
-
-    app.register_blueprint(
-        dashboard_bp,
-        url_prefix="/api/dashboard"
-    )
-
-    app.register_blueprint(
-        goals_bp,
-        url_prefix="/api/goals"
-    )
-
-    app.register_blueprint(
-        tasks_bp,
-        url_prefix="/api/tasks"
-    )
-
-    app.register_blueprint(
-        family_bp,
-        url_prefix="/api/family"
-    )
-
-    app.register_blueprint(
-        journal_bp,
-        url_prefix="/api/journal"
-    )
-
-    app.register_blueprint(
-        achievements_bp,
-        url_prefix="/api/achievements"
-    )
-
-    app.register_blueprint(
-        analytics_bp,
-        url_prefix="/api/analytics"
-    )
-
-    app.register_blueprint(
-        inspiration_bp,
-        url_prefix="/api/inspiration"
-    )
-
-    app.register_blueprint(
-        timeline_bp,
-        url_prefix="/api/timeline"
-    )
-
-    app.register_blueprint(
-        values_bp,
-        url_prefix="/api/values"
-    )
-
-    app.register_blueprint(
-        knowledge_bp,
-        url_prefix="/api/knowledge"
-    )
-
-    app.register_blueprint(
-        reflection_bp,
-        url_prefix="/api/reflection"
-    )
-
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
+    app.register_blueprint(goals_bp, url_prefix="/api/goals")
+    app.register_blueprint(tasks_bp, url_prefix="/api/tasks")
+    app.register_blueprint(family_bp, url_prefix="/api/family")
+    app.register_blueprint(journal_bp, url_prefix="/api/journal")
+    app.register_blueprint(achievements_bp, url_prefix="/api/achievements")
+    app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
+    app.register_blueprint(inspiration_bp, url_prefix="/api/inspiration")
+    app.register_blueprint(timeline_bp, url_prefix="/api/timeline")
+    app.register_blueprint(values_bp, url_prefix="/api/values")
+    app.register_blueprint(knowledge_bp, url_prefix="/api/knowledge")
+    app.register_blueprint(reflection_bp, url_prefix="/api/reflection")
     app.register_blueprint(
         legacy_bot_bp,
         url_prefix="/api/legacy_bot"
@@ -190,11 +133,12 @@ def create_app(config_name="production"):
 
 
     # --------------------------------------------------
-    # Health Check
+    # Health
     # --------------------------------------------------
 
     @app.route("/")
     def home():
+
         return jsonify({
             "message": "Life Management Dashboard API",
             "status": "running"
@@ -203,6 +147,7 @@ def create_app(config_name="production"):
 
     @app.route("/health")
     def health():
+
         return jsonify({
             "status": "healthy",
             "version": app.config["VERSION"]
@@ -210,36 +155,80 @@ def create_app(config_name="production"):
 
 
     # --------------------------------------------------
-    # Error Handlers
+    # Error Handling
     # --------------------------------------------------
 
     @app.errorhandler(404)
     def not_found(error):
+
         return jsonify({
             "error": "Not found"
-        }), 404
+        }),404
 
 
     @app.errorhandler(500)
     def internal_error(error):
+
         logger.error(error)
 
         return jsonify({
-            "error": "Internal Server Error",
-            "message": str(error)
-        }), 500
+            "error":"Internal Server Error",
+            "message":str(error)
+        }),500
+
 
 
     # --------------------------------------------------
-    # Create Database Tables
-    # IMPORTANT FOR RENDER
+    # Database Initialization
     # --------------------------------------------------
 
     with app.app_context():
+
         db.create_all()
+
         logger.info(
             "✅ Database tables checked/created"
         )
+
+
+        # ----------------------------------------------
+        # Create Default Admin User
+        # ----------------------------------------------
+
+        existing_user = User.query.filter_by(
+            username="aman"
+        ).first()
+
+
+        if not existing_user:
+
+            password_hash = bcrypt.generate_password_hash(
+                "password123"
+            ).decode("utf-8")
+
+
+            admin = User(
+                username="aman",
+                email="aman@example.com",
+                password_hash=password_hash,
+                full_name="Aman"
+            )
+
+
+            db.session.add(admin)
+            db.session.commit()
+
+
+            logger.info(
+                "✅ Default user created: aman"
+            )
+
+
+        else:
+
+            logger.info(
+                "✅ Default user already exists"
+            )
 
 
     return app
@@ -262,9 +251,11 @@ if __name__ == "__main__":
 
     app = create_app("development")
 
+
     logger.info(
         "🚀 Starting Flask server on http://localhost:5000"
     )
+
 
     app.run(
         host="0.0.0.0",
