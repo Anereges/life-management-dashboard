@@ -1,9 +1,9 @@
-﻿// js/components/Analytics.js
+// js/components/Analytics.js
 export class Analytics {
     constructor() {
         this.container = null;
         this.chartInstances = [];
-        this.apiBase = 'http://localhost:5000/api/analytics';
+        this.apiBase = 'https://life-management-api.onrender.com/api/analytics';
         this.token = localStorage.getItem('access_token');
         this.stats = {
             coding: { hours: 0, label: 'Coding Time', icon: 'fa-code', trend: '+0%', color: '#6C5CE7' },
@@ -11,7 +11,7 @@ export class Analytics {
             workouts: { count: 0, label: 'Workouts', icon: 'fa-dumbbell', trend: '+0%', color: '#FDCB6E' },
             tasks: { count: 0, label: 'Tasks Completed', icon: 'fa-check-circle', trend: '+0%', color: '#E17055' },
             goals: { count: 0, label: 'Goals Achieved', icon: 'fa-bullseye', trend: '+0%', color: '#A29BFE' },
-            streak: { days: 0, label: 'Day Streak', icon: 'fa-fire', trend: '🔥', color: '#FF6B6B' }
+            streak: { days: 0, label: 'Day Streak', icon: 'fa-fire', trend: '??', color: '#FF6B6B' }
         };
         
         this.weeklyData = {
@@ -95,7 +95,7 @@ export class Analytics {
             
         } catch (error) {
             console.error('Error loading analytics data:', error);
-            this.showToast('⚠️ Error loading analytics data');
+            this.showToast('?? Error loading analytics data');
         }
     }
 
@@ -153,7 +153,7 @@ export class Analytics {
             {
                 icon: 'fa-rocket',
                 color: 'var(--success)',
-                title: '🚀 Peak Performance',
+                title: '?? Peak Performance',
                 description: this.weeklyData.productivity.length > 0 ? 
                     `Your productivity peaks on ${this.weeklyData.labels[this.weeklyData.productivity.indexOf(Math.max(...this.weeklyData.productivity))] || 'Thursday'} (${Math.max(...this.weeklyData.productivity)}%). Schedule important tasks on this day.` :
                     'Track your productivity to discover your peak performance days.'
@@ -161,7 +161,7 @@ export class Analytics {
             {
                 icon: 'fa-chart-line',
                 color: 'var(--warning)',
-                title: '📈 Growth Trend',
+                title: '?? Growth Trend',
                 description: this.stats.goals.count > 0 ? 
                     `You've achieved ${this.stats.goals.count} goals! Keep building on this momentum.` :
                     'Start setting goals to track your growth journey.'
@@ -169,7 +169,7 @@ export class Analytics {
             {
                 icon: 'fa-heart',
                 color: 'var(--primary-light)',
-                title: '💪 Consistency',
+                title: '?? Consistency',
                 description: this.stats.streak.days > 0 ? 
                     `${this.stats.streak.days}-day streak! You're building powerful habits. Consistency is your superpower.` :
                     'Start building a daily streak by completing tasks consistently.'
@@ -177,7 +177,7 @@ export class Analytics {
             {
                 icon: 'fa-bullseye',
                 color: 'var(--danger)',
-                title: '🎯 Focus Areas',
+                title: '?? Focus Areas',
                 description: this.overviewData ? 
                     `You have ${this.overviewData.totals?.tasks || 0} tasks and ${this.overviewData.totals?.goals || 0} goals. Keep pushing forward!` :
                     'Track your tasks and goals to see your focus areas.'
@@ -203,7 +203,7 @@ export class Analytics {
                     <div class="analytics-header-content">
                         <div>
                             <div class="analytics-badge">
-                                <span class="analytics-badge-icon">📊</span>
+                                <span class="analytics-badge-icon">??</span>
                                 <span class="analytics-badge-text">Performance Analytics</span>
                             </div>
                             <h1 class="analytics-title">Your <span class="analytics-title-highlight">Progress</span> Dashboard</h1>
@@ -233,7 +233,7 @@ export class Analytics {
                         <div class="analytics-stat-divider"></div>
                         <div class="analytics-stat">
                             <span class="analytics-stat-number" style="color: var(--warning);">${this.stats.streak.days} days</span>
-                            <span class="analytics-stat-label">🔥 Current Streak</span>
+                            <span class="analytics-stat-label">?? Current Streak</span>
                         </div>
                         <div class="analytics-stat-divider"></div>
                         <div class="analytics-stat">
@@ -258,7 +258,7 @@ export class Analytics {
                             <div class="stat-info">
                                 <h3 class="stat-number">${stat.hours || stat.count || stat.days || 0}</h3>
                                 <p>${stat.label}</p>
-                                <span class="stat-sub">${stat.trend ? '↑ ' + stat.trend : ''}</span>
+                                <span class="stat-sub">${stat.trend ? '? ' + stat.trend : ''}</span>
                             </div>
                         </div>
                     `).join('')}
@@ -571,7 +571,7 @@ export class Analytics {
         // Refresh button
         document.getElementById('analyticsRefreshBtn')?.addEventListener('click', (e) => {
             e.preventDefault();
-            this.showToast('🔄 Analytics refreshed!');
+            this.showToast('?? Analytics refreshed!');
             this.loadData();
             this.render();
         });
@@ -590,40 +590,40 @@ export class Analytics {
                     b.classList.remove('active');
                 });
                 btn.classList.add('active');
-                this.showToast(`📊 Showing ${btn.dataset.chart} view`);
+                this.showToast(`?? Showing ${btn.dataset.chart} view`);
             });
         });
     }
 
     exportReport() {
         const report = `
-📊 Performance Report - ${new Date().toLocaleDateString()}
+?? Performance Report - ${new Date().toLocaleDateString()}
 ${'='.repeat(50)}
 
-📈 OVERALL STATISTICS
-• Total Achievements: ${this.stats.tasks.count + this.stats.goals.count + this.stats.books.count}
-• Task Completion: ${this.overviewData ? Math.round(this.overviewData.task_completion_rate || 0) : 0}%
-• Goal Completion: ${this.overviewData ? Math.round(this.overviewData.goal_completion_rate || 0) : 0}%
-• Current Streak: ${this.stats.streak.days} days
-• Coding Activities: ${this.stats.coding.hours}
+?? OVERALL STATISTICS
+� Total Achievements: ${this.stats.tasks.count + this.stats.goals.count + this.stats.books.count}
+� Task Completion: ${this.overviewData ? Math.round(this.overviewData.task_completion_rate || 0) : 0}%
+� Goal Completion: ${this.overviewData ? Math.round(this.overviewData.goal_completion_rate || 0) : 0}%
+� Current Streak: ${this.stats.streak.days} days
+� Coding Activities: ${this.stats.coding.hours}
 
-📚 LEARNING
-• Books/Reading: ${this.stats.books.count}
-• Coding Activities: ${this.stats.coding.hours}
+?? LEARNING
+� Books/Reading: ${this.stats.books.count}
+� Coding Activities: ${this.stats.coding.hours}
 
-💪 HEALTH & FITNESS
-• Fitness Activities: ${this.stats.workouts.count}
+?? HEALTH & FITNESS
+� Fitness Activities: ${this.stats.workouts.count}
 
-🎯 GOALS
-• Achieved: ${this.stats.goals.count}
-• Total Tasks: ${this.overviewData?.totals?.tasks || 0}
+?? GOALS
+� Achieved: ${this.stats.goals.count}
+� Total Tasks: ${this.overviewData?.totals?.tasks || 0}
 
-📊 WEEKLY PERFORMANCE
-• Best Day: ${this.weeklyData.labels[this.weeklyData.productivity.indexOf(Math.max(...this.weeklyData.productivity))] || 'N/A'}
-• Tasks Completed: ${this.weeklyData.tasks.reduce((a, b) => a + b, 0)}
+?? WEEKLY PERFORMANCE
+� Best Day: ${this.weeklyData.labels[this.weeklyData.productivity.indexOf(Math.max(...this.weeklyData.productivity))] || 'N/A'}
+� Tasks Completed: ${this.weeklyData.tasks.reduce((a, b) => a + b, 0)}
 
-💡 INSIGHTS
-${this.insights.map(i => `• ${i.title}: ${i.description}`).join('\n')}
+?? INSIGHTS
+${this.insights.map(i => `� ${i.title}: ${i.description}`).join('\n')}
 
 ${'='.repeat(50)}
 Generated by Life Management Dashboard
@@ -637,7 +637,7 @@ Generated by Life Management Dashboard
         a.click();
         URL.revokeObjectURL(url);
 
-        this.showToast('📥 Report exported successfully!');
+        this.showToast('?? Report exported successfully!');
     }
 
     animateCards() {

@@ -1,4 +1,4 @@
-﻿// js/components/Journal.js
+// js/components/Journal.js
 export class Journal {
     constructor() {
         this.container = null;
@@ -10,7 +10,7 @@ export class Journal {
         this.editingEntryId = null;
         this.viewingEntryId = null;
         this.entries = [];
-        this.apiBase = 'http://localhost:5000/api/journal';
+        this.apiBase = 'https://life-management-api.onrender.com/api/journal';
         this.token = localStorage.getItem('access_token');
         this.deleteTargetId = null;
         this.formData = {};
@@ -27,7 +27,7 @@ export class Journal {
             if (response.ok) {
                 const data = await response.json();
                 this.entries = data.map(e => this.transformEntry(e));
-                console.log('✅ Journal entries loaded:', this.entries);
+                console.log('? Journal entries loaded:', this.entries);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -104,34 +104,34 @@ export class Journal {
 
     getEmojiForMood(mood) {
         const emojis = {
-            1: '😔',
-            2: '😟',
-            3: '😕',
-            4: '😐',
-            5: '🙂',
-            6: '😊',
-            7: '😄',
-            8: '😃',
-            9: '😍',
-            10: '🥰'
+            1: '??',
+            2: '??',
+            3: '??',
+            4: '??',
+            5: '??',
+            6: '??',
+            7: '??',
+            8: '??',
+            9: '??',
+            10: '??'
         };
-        return emojis[mood] || '😊';
+        return emojis[mood] || '??';
     }
 
     getEmojiForEnergy(energy) {
         const emojis = {
-            1: '😴',
-            2: '😪',
-            3: '😫',
-            4: '😩',
-            5: '😣',
-            6: '😌',
-            7: '💪',
-            8: '⚡',
-            9: '🔥',
-            10: '🌟'
+            1: '??',
+            2: '??',
+            3: '??',
+            4: '??',
+            5: '??',
+            6: '??',
+            7: '??',
+            8: '?',
+            9: '??',
+            10: '??'
         };
-        return emojis[energy] || '⚡';
+        return emojis[energy] || '?';
     }
 
     async render() {
@@ -152,7 +152,7 @@ export class Journal {
                     <div class="journal-header-content">
                         <div>
                             <div class="journal-badge">
-                                <span class="journal-badge-icon">📝</span>
+                                <span class="journal-badge-icon">??</span>
                                 <span class="journal-badge-text">Memory Journal</span>
                             </div>
                             <h1 class="journal-title">Your <span class="journal-title-highlight">Story</span> Matters</h1>
@@ -175,21 +175,21 @@ export class Journal {
                         <div class="journal-stat-divider"></div>
                         <div class="journal-stat">
                             <span class="journal-stat-number">${this.entries.filter(e => e.isFavorite).length}</span>
-                            <span class="journal-stat-label">⭐ Favorites</span>
+                            <span class="journal-stat-label">? Favorites</span>
                         </div>
                         <div class="journal-stat-divider"></div>
                         <div class="journal-stat">
                             <span class="journal-stat-number" style="color: var(--success);">${this.entries.length > 0 ? Math.round(this.entries.reduce((sum, e) => sum + e.mood, 0) / this.entries.length) : 0}/10</span>
-                            <span class="journal-stat-label">😊 Average Mood</span>
+                            <span class="journal-stat-label">?? Average Mood</span>
                         </div>
                         <div class="journal-stat-divider"></div>
                         <div class="journal-stat">
                             <span class="journal-stat-number" style="color: var(--warning);">${this.entries.length > 0 ? Math.round(this.entries.reduce((sum, e) => sum + e.energy, 0) / this.entries.length) : 0}/10</span>
-                            <span class="journal-stat-label">⚡ Average Energy</span>
+                            <span class="journal-stat-label">? Average Energy</span>
                         </div>
                         <div class="journal-stat-divider"></div>
                         <div class="journal-stat">
-                            <span class="journal-stat-number">${this.entries.length} 🔥</span>
+                            <span class="journal-stat-number">${this.entries.length} ??</span>
                             <span class="journal-stat-label">Day Streak</span>
                         </div>
                     </div>
@@ -206,9 +206,9 @@ export class Journal {
                             <label>Mood</label>
                             <div class="filter-buttons" id="journalMoodFilters">
                                 <button class="filter-btn active" data-mood="all">All</button>
-                                <button class="filter-btn" data-mood="high">😊 Happy (7-10)</button>
-                                <button class="filter-btn" data-mood="medium">😐 Neutral (4-6)</button>
-                                <button class="filter-btn" data-mood="low">😔 Low (1-3)</button>
+                                <button class="filter-btn" data-mood="high">?? Happy (7-10)</button>
+                                <button class="filter-btn" data-mood="medium">?? Neutral (4-6)</button>
+                                <button class="filter-btn" data-mood="low">?? Low (1-3)</button>
                             </div>
                         </div>
                         <div class="filter-group">
@@ -315,7 +315,7 @@ export class Journal {
                             </button>
                         </div>
                         <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                            <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                            <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                             <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                             <p style="color: var(--gray); margin-bottom: 20px;">
                                 This action cannot be undone. This will permanently delete this journal entry.
@@ -350,7 +350,7 @@ export class Journal {
         if (entries.length === 0) {
             return `
                 <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                    <div class="empty-state-icon">📖</div>
+                    <div class="empty-state-icon">??</div>
                     <h3 class="empty-state-title">No Journal Entries</h3>
                     <p class="empty-state-subtitle">Start capturing your memories and thoughts today!</p>
                     <button class="btn btn-primary btn-glow" id="journalEmptyAddBtn">
@@ -497,7 +497,7 @@ export class Journal {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -594,7 +594,7 @@ export class Journal {
             this.closeDeleteModal();
             await this.loadEntries();
             this.applyFilters();
-            this.showToast('🗑️ Entry deleted', 'warning');
+            this.showToast('??? Entry deleted', 'warning');
         }
     }
 
@@ -610,7 +610,7 @@ export class Journal {
 
         if (!title) {
             document.getElementById('journalTitleInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please enter a title', 'error');
+            this.showToast('?? Please enter a title', 'error');
             setTimeout(() => {
                 document.getElementById('journalTitleInput').style.borderColor = '';
             }, 2000);
@@ -619,7 +619,7 @@ export class Journal {
 
         if (!content) {
             document.getElementById('journalContentInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please write some content', 'error');
+            this.showToast('?? Please write some content', 'error');
             setTimeout(() => {
                 document.getElementById('journalContentInput').style.borderColor = '';
             }, 2000);
@@ -639,12 +639,12 @@ export class Journal {
         if (this.editingEntryId) {
             result = await this.apiRequest(`/entries/${this.editingEntryId}`, 'PUT', entryData);
             if (result) {
-                this.showToast('✅ Entry updated successfully!', 'success');
+                this.showToast('? Entry updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/entries', 'POST', entryData);
             if (result) {
-                this.showToast('📝 Journal entry created successfully!', 'success');
+                this.showToast('?? Journal entry created successfully!', 'success');
             }
         }
 
@@ -673,7 +673,7 @@ export class Journal {
         if (result) {
             await this.loadEntries();
             this.applyFilters();
-            this.showToast(newFavorite ? '⭐ Added to favorites!' : '⭐ Removed from favorites');
+            this.showToast(newFavorite ? '? Added to favorites!' : '? Removed from favorites');
         }
     }
 
@@ -681,7 +681,7 @@ export class Journal {
         const entry = this.entries.find(e => e.id === id);
         if (!entry) return;
         
-        const shareText = `${entry.title}\n\n${entry.content}\n\n📅 ${entry.date}\n😊 Mood: ${entry.mood}/10\n⚡ Energy: ${entry.energy}/10\n🏷️ Tags: ${entry.tags.join(', ')}`;
+        const shareText = `${entry.title}\n\n${entry.content}\n\n?? ${entry.date}\n?? Mood: ${entry.mood}/10\n? Energy: ${entry.energy}/10\n??? Tags: ${entry.tags.join(', ')}`;
         
         if (navigator.share) {
             navigator.share({
@@ -690,7 +690,7 @@ export class Journal {
             }).catch(() => {});
         } else {
             navigator.clipboard?.writeText(shareText).then(() => {
-                this.showToast('📋 Entry copied to clipboard!');
+                this.showToast('?? Entry copied to clipboard!');
             }).catch(() => {
                 prompt('Copy this entry:', shareText);
             });

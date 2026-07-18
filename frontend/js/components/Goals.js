@@ -1,4 +1,4 @@
-﻿// js/components/Goals.js
+// js/components/Goals.js
 export class Goals {
     constructor() {
         this.container = null;
@@ -7,7 +7,7 @@ export class Goals {
         this.editingGoalId = null;
         this.viewingGoalId = null;
         this.goals = [];
-        this.apiBase = 'http://localhost:5000/api/goals';
+        this.apiBase = 'https://life-management-api.onrender.com/api/goals';
         this.token = localStorage.getItem('access_token');
         this.deleteTargetId = null;
         this.isModalOpen = false;
@@ -25,7 +25,7 @@ export class Goals {
             if (response.ok) {
                 const data = await response.json();
                 this.goals = data.map(g => this.transformGoal(g));
-                console.log('✅ Goals loaded:', this.goals);
+                console.log('? Goals loaded:', this.goals);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -95,15 +95,15 @@ export class Goals {
 
     getEmojiForCategory(category) {
         const emojis = {
-            'Career': '💼',
-            'Learning': '📚',
-            'Health': '🏋️',
-            'Personal': '🌟',
-            'Finance': '💰',
-            'Other': '📌',
-            'General': '📌'
+            'Career': '??',
+            'Learning': '??',
+            'Health': '???',
+            'Personal': '??',
+            'Finance': '??',
+            'Other': '??',
+            'General': '??'
         };
-        return emojis[category] || '📌';
+        return emojis[category] || '??';
     }
 
     getPriorityLabel(priority) {
@@ -132,9 +132,9 @@ export class Goals {
 
     getPriorityLabelDisplay(priority) {
         const labels = {
-            'high': '🔥 High',
-            'medium': '⚡ Medium',
-            'low': '📌 Low'
+            'high': '?? High',
+            'medium': '? Medium',
+            'low': '?? Low'
         };
         return labels[priority] || priority;
     }
@@ -167,7 +167,7 @@ export class Goals {
                     <div class="goals-header-content">
                         <div>
                             <div class="goals-badge">
-                                <span class="goals-badge-icon">🎯</span>
+                                <span class="goals-badge-icon">??</span>
                                 <span class="goals-badge-text">Goal Tracker</span>
                             </div>
                             <h1 class="goals-title">Your <span class="goals-title-highlight">Goals</span> Journey</h1>
@@ -188,17 +188,17 @@ export class Goals {
                         <div class="goal-stat-divider"></div>
                         <div class="goal-stat">
                             <span class="goal-stat-number" style="color: var(--success);">${this.goals.filter(g => g.status === 'completed').length}</span>
-                            <span class="goal-stat-label">Completed ✅</span>
+                            <span class="goal-stat-label">Completed ?</span>
                         </div>
                         <div class="goal-stat-divider"></div>
                         <div class="goal-stat">
                             <span class="goal-stat-number" style="color: var(--warning);">${this.goals.filter(g => g.status === 'in_progress').length}</span>
-                            <span class="goal-stat-label">In Progress 🔄</span>
+                            <span class="goal-stat-label">In Progress ??</span>
                         </div>
                         <div class="goal-stat-divider"></div>
                         <div class="goal-stat">
                             <span class="goal-stat-number" style="color: var(--gray);">${this.goals.filter(g => g.status === 'pending').length}</span>
-                            <span class="goal-stat-label">Pending ⏳</span>
+                            <span class="goal-stat-label">Pending ?</span>
                         </div>
                         <div class="goal-stat-divider"></div>
                         <div class="goal-stat">
@@ -260,20 +260,20 @@ export class Goals {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Category</label>
                                     <select id="goalsCategoryInput" class="form-control">
-                                        <option value="Career">💼 Career</option>
-                                        <option value="Learning">📚 Learning</option>
-                                        <option value="Health">🏋️ Health</option>
-                                        <option value="Personal">🌟 Personal</option>
-                                        <option value="Finance">💰 Finance</option>
-                                        <option value="Other">📌 Other</option>
+                                        <option value="Career">?? Career</option>
+                                        <option value="Learning">?? Learning</option>
+                                        <option value="Health">??? Health</option>
+                                        <option value="Personal">?? Personal</option>
+                                        <option value="Finance">?? Finance</option>
+                                        <option value="Other">?? Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
                                     <label>Priority</label>
                                     <select id="goalsPriorityInput" class="form-control">
-                                        <option value="high">🔥 High</option>
-                                        <option value="medium" selected>⚡ Medium</option>
-                                        <option value="low">📌 Low</option>
+                                        <option value="high">?? High</option>
+                                        <option value="medium" selected>? Medium</option>
+                                        <option value="low">?? Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -281,9 +281,9 @@ export class Goals {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Status</label>
                                     <select id="goalsStatusInput" class="form-control">
-                                        <option value="pending">⏳ Pending</option>
-                                        <option value="in_progress">🔄 In Progress</option>
-                                        <option value="completed">✅ Completed</option>
+                                        <option value="pending">? Pending</option>
+                                        <option value="in_progress">?? In Progress</option>
+                                        <option value="completed">? Completed</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
@@ -343,7 +343,7 @@ export class Goals {
                             </button>
                         </div>
                         <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                            <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                            <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                             <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                             <p style="color: var(--gray); margin-bottom: 20px;">
                                 This action cannot be undone. This will permanently delete the goal and all its data.
@@ -378,7 +378,7 @@ export class Goals {
         if (goals.length === 0) {
             return `
                 <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                    <div class="empty-state-icon">🎯</div>
+                    <div class="empty-state-icon">??</div>
                     <h3 class="empty-state-title">No Goals Found</h3>
                     <p class="empty-state-subtitle">Start your journey by creating your first goal!</p>
                     <button class="btn btn-primary btn-glow" id="goalsEmptyAddBtn">
@@ -443,13 +443,13 @@ export class Goals {
                         <div class="goal-milestones-header">
                             <i class="fas fa-tasks" style="color: var(--primary);"></i>
                             <span>Milestones</span>
-                            <span class="milestone-count">${goal.milestones.filter(m => m.includes('✅')).length}/${goal.milestones.length}</span>
+                            <span class="milestone-count">${goal.milestones.filter(m => m.includes('?')).length}/${goal.milestones.length}</span>
                         </div>
                         <div class="milestone-list">
                             ${goal.milestones.map(milestone => `
-                                <div class="milestone-item ${milestone.includes('✅') ? 'completed' : ''}">
-                                    <span class="milestone-icon">${milestone.includes('✅') ? '✅' : '⏳'}</span>
-                                    <span>${milestone.replace('✅', '').replace('⏳', '').trim()}</span>
+                                <div class="milestone-item ${milestone.includes('?') ? 'completed' : ''}">
+                                    <span class="milestone-icon">${milestone.includes('?') ? '?' : '?'}</span>
+                                    <span>${milestone.replace('?', '').replace('?', '').trim()}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -517,7 +517,7 @@ export class Goals {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -608,7 +608,7 @@ export class Goals {
         document.getElementById('goalsProgressInput').value = goal.progress;
         document.getElementById('goalsDeadlineInput').value = goal.deadline !== 'Ongoing' ? goal.deadline : '';
         document.getElementById('goalsMilestonesInput').value = goal.milestones ? 
-            goal.milestones.map(m => m.replace('✅', '').replace('⏳', '').trim()).join(', ') : '';
+            goal.milestones.map(m => m.replace('?', '').replace('?', '').trim()).join(', ') : '';
         
         this.isModalOpen = true;
         const modal = document.getElementById('goalsModal');
@@ -651,7 +651,7 @@ export class Goals {
 
         if (!title) {
             document.getElementById('goalsTitleInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please enter a goal title', 'error');
+            this.showToast('?? Please enter a goal title', 'error');
             setTimeout(() => {
                 document.getElementById('goalsTitleInput').style.borderColor = '';
             }, 2000);
@@ -664,8 +664,8 @@ export class Goals {
             milestones = milestonesInput.split(',').map(m => m.trim()).filter(m => m);
             const completedCount = Math.round((progress / 100) * milestones.length);
             milestones = milestones.map((m, index) => {
-                if (index < completedCount) return `${m} - ✅`;
-                return `${m} - ⏳`;
+                if (index < completedCount) return `${m} - ?`;
+                return `${m} - ?`;
             });
         }
 
@@ -684,12 +684,12 @@ export class Goals {
         if (this.editingGoalId) {
             result = await this.apiRequest(`/${this.editingGoalId}`, 'PUT', goalData);
             if (result) {
-                this.showToast('✅ Goal updated successfully!', 'success');
+                this.showToast('? Goal updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/', 'POST', goalData);
             if (result) {
-                this.showToast('🎯 New goal created successfully!', 'success');
+                this.showToast('?? New goal created successfully!', 'success');
             }
         }
 
@@ -717,7 +717,7 @@ export class Goals {
             this.closeDeleteModal();
             await this.loadGoals();
             this.applyFilters();
-            this.showToast('🗑️ Goal deleted successfully', 'warning');
+            this.showToast('??? Goal deleted successfully', 'warning');
         }
     }
 
@@ -744,9 +744,9 @@ export class Goals {
             this.applyFilters();
             
             const messages = {
-                'pending': '⏳ Goal marked as pending',
-                'in_progress': '🔄 Goal marked as in progress',
-                'completed': '🎉 Goal completed! Congratulations!'
+                'pending': '? Goal marked as pending',
+                'in_progress': '?? Goal marked as in progress',
+                'completed': '?? Goal completed! Congratulations!'
             };
             this.showToast(messages[newStatus] || 'Status updated', 'success');
         }
@@ -759,9 +759,9 @@ export class Goals {
         this.viewingGoalId = id;
         
         const statusEmoji = {
-            'pending': '⏳',
-            'in_progress': '🔄',
-            'completed': '✅'
+            'pending': '?',
+            'in_progress': '??',
+            'completed': '?'
         };
 
         const statusColors = {
@@ -771,9 +771,9 @@ export class Goals {
         };
 
         const priorityEmojis = {
-            'high': '🔥',
-            'medium': '⚡',
-            'low': '📌'
+            'high': '??',
+            'medium': '?',
+            'low': '??'
         };
 
         const body = document.getElementById('goalsDetailsBody');
@@ -831,14 +831,14 @@ export class Goals {
                         <h4><i class="fas fa-tasks" style="color: var(--primary);"></i> Milestones</h4>
                         <div class="goal-details-milestone-list">
                             ${goal.milestones.map(milestone => `
-                                <div class="goal-details-milestone ${milestone.includes('✅') ? 'completed' : ''}">
-                                    <span class="milestone-status">${milestone.includes('✅') ? '✅' : '⏳'}</span>
-                                    <span>${milestone.replace('✅', '').replace('⏳', '').trim()}</span>
+                                <div class="goal-details-milestone ${milestone.includes('?') ? 'completed' : ''}">
+                                    <span class="milestone-status">${milestone.includes('?') ? '?' : '?'}</span>
+                                    <span>${milestone.replace('?', '').replace('?', '').trim()}</span>
                                 </div>
                             `).join('')}
                         </div>
                         <div class="goal-details-milestone-stats">
-                            ${goal.milestones.filter(m => m.includes('✅')).length} of ${goal.milestones.length} completed
+                            ${goal.milestones.filter(m => m.includes('?')).length} of ${goal.milestones.length} completed
                         </div>
                     </div>
                 ` : `

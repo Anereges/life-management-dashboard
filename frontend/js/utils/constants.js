@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'https://life-management-api.onrender.com/api';
 export const APP_NAME = 'Life Management Dashboard';
 export const VERSION = '1.0.0';
 

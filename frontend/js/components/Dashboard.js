@@ -1,4 +1,4 @@
-﻿// js/components/Dashboard.js
+// js/components/Dashboard.js
 export class Dashboard {
     constructor() {
         this.container = null;
@@ -34,7 +34,7 @@ export class Dashboard {
         this.timerInterval = null;
         this.notificationInterval = null;
         this.showNotificationPanel = false;
-        this.apiBase = 'http://localhost:5000/api/dashboard';
+        this.apiBase = 'https://life-management-api.onrender.com/api/dashboard';
         this.token = localStorage.getItem('access_token');
         this.userName = 'Guest';
         this.greeting = 'Good Evening';
@@ -52,7 +52,7 @@ export class Dashboard {
             if (response.ok) {
                 const data = await response.json();
                 this.updateDashboardData(data);
-                console.log('✅ Dashboard data loaded:', data);
+                console.log('? Dashboard data loaded:', data);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -263,7 +263,7 @@ export class Dashboard {
                     <div class="greeting-section">
                         <div class="greeting-wrapper">
                             <h1 class="greeting-text">
-                                <span class="wave-emoji">👋</span>
+                                <span class="wave-emoji">??</span>
                                 ${this.greeting}, ${this.userName}
                                 <span class="status-dot pulse-dot"></span>
                             </h1>
@@ -372,12 +372,12 @@ export class Dashboard {
                                 <i class="fas fa-fire"></i>
                             </div>
                             <div class="stat-trend up">
-                                <i class="fas fa-arrow-up"></i> ${this.streakCount > 0 ? '🔥' : '0%'}
+                                <i class="fas fa-arrow-up"></i> ${this.streakCount > 0 ? '??' : '0%'}
                             </div>
                         </div>
                         <div class="stat-info">
                             <h3 class="counter" data-target="${this.streakCount}">0</h3>
-                            <p>Day Streak 🔥</p>
+                            <p>Day Streak ??</p>
                             <span class="stat-sub">Best: ${this.streakCount} days</span>
                         </div>
                         <div class="stat-progress">
@@ -399,7 +399,7 @@ export class Dashboard {
                         <div class="stat-info">
                             <h3 class="counter" data-target="${this.goalsProgress}">0<span>%</span></h3>
                             <p>Goals Progress</p>
-                            <span class="stat-sub">${this.goalsProgress < 100 ? `${Math.round((100 - this.goalsProgress) / 20)} goals remaining` : 'All goals completed! 🎉'}</span>
+                            <span class="stat-sub">${this.goalsProgress < 100 ? `${Math.round((100 - this.goalsProgress) / 20)} goals remaining` : 'All goals completed! ??'}</span>
                         </div>
                         <div class="stat-progress">
                             <div class="progress-bar">
@@ -776,7 +776,7 @@ export class Dashboard {
         
         // View All Achievements
         document.getElementById('viewAllAchievementsBtn')?.addEventListener('click', () => {
-            this.showToast('Achievements', 'Viewing all achievements... 🏆', 'info');
+            this.showToast('Achievements', 'Viewing all achievements... ??', 'info');
         });
 
         // Quick Actions
@@ -814,7 +814,7 @@ export class Dashboard {
 
         // Settings Button
         document.getElementById('settingsBtn')?.addEventListener('click', () => {
-            this.showToast('Settings', 'Opening settings panel... ⚙️', 'info');
+            this.showToast('Settings', 'Opening settings panel... ??', 'info');
         });
 
         // Fullscreen Button
@@ -879,9 +879,9 @@ export class Dashboard {
                     <div class="form-group">
                         <label>Priority</label>
                         <select id="taskPriorityInput" class="form-control">
-                            <option value="high">🔥 High</option>
-                            <option value="medium" selected>⚡ Medium</option>
-                            <option value="low">📌 Low</option>
+                            <option value="high">?? High</option>
+                            <option value="medium" selected>? Medium</option>
+                            <option value="low">?? Low</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -939,9 +939,9 @@ export class Dashboard {
             this.renderFocusItems();
             this.updateTaskProgress();
             closeModal();
-            this.showToast('Success', 'Task added successfully! ✅', 'success');
+            this.showToast('Success', 'Task added successfully! ?', 'success');
             
-            this.addNotification(`📝 New task added: "${title}"`);
+            this.addNotification(`?? New task added: "${title}"`);
             
             const items = document.querySelectorAll('.focus-item');
             if (items.length > 0) {
@@ -983,7 +983,7 @@ export class Dashboard {
         this.notifications.forEach(n => n.read = true);
         this.updateNotificationBadge();
         this.renderNotifications();
-        this.showToast('Notifications', 'All notifications marked as read ✅', 'success');
+        this.showToast('Notifications', 'All notifications marked as read ?', 'success');
     }
 
     addNotification(message) {
@@ -1033,13 +1033,13 @@ export class Dashboard {
             this.updateTaskProgress();
             
             const statusMessages = {
-                'pending': 'Task marked as pending ⏳',
-                'in-progress': 'Task in progress 🔄',
-                'completed': 'Task completed! 🎉'
+                'pending': 'Task marked as pending ?',
+                'in-progress': 'Task in progress ??',
+                'completed': 'Task completed! ??'
             };
             
             if (task.status === 'completed') {
-                this.addNotification(`🎉 Task completed: "${task.title}"`);
+                this.addNotification(`?? Task completed: "${task.title}"`);
                 this.xpPoints += 10;
                 document.getElementById('achievementsTotal').innerHTML = `
                     <span><i class="fas fa-star"></i> Total XP: ${this.xpPoints}</span>
@@ -1060,9 +1060,9 @@ export class Dashboard {
                 this.renderFocusItems();
                 this.updateTaskProgress();
                 if (task) {
-                    this.addNotification(`🗑️ Task deleted: "${task.title}"`);
+                    this.addNotification(`??? Task deleted: "${task.title}"`);
                 }
-                this.showToast('Deleted', 'Task deleted successfully 🗑️', 'warning');
+                this.showToast('Deleted', 'Task deleted successfully ???', 'warning');
             }
         }, 100);
     }
@@ -1070,9 +1070,9 @@ export class Dashboard {
     handleQuickAction(action) {
         const actions = {
             'newTask': () => this.showAddTaskModal(),
-            'schedule': () => this.showToast('Schedule', 'Opening calendar... 📅', 'info'),
-            'analytics': () => this.showToast('Analytics', 'Loading analytics... 📊', 'info'),
-            'settings': () => this.showToast('Settings', 'Opening settings... ⚙️', 'info'),
+            'schedule': () => this.showToast('Schedule', 'Opening calendar... ??', 'info'),
+            'analytics': () => this.showToast('Analytics', 'Loading analytics... ??', 'info'),
+            'settings': () => this.showToast('Settings', 'Opening settings... ??', 'info'),
             'export': () => this.exportData(),
             'refresh': () => this.refreshDashboard()
         };
@@ -1104,20 +1104,20 @@ export class Dashboard {
         a.click();
         URL.revokeObjectURL(url);
         
-        this.showToast('Export', 'Data exported successfully! 📥', 'success');
-        this.addNotification('📤 Dashboard data exported');
+        this.showToast('Export', 'Data exported successfully! ??', 'success');
+        this.addNotification('?? Dashboard data exported');
     }
 
     refreshDashboard() {
-        this.showToast('Refresh', 'Refreshing dashboard... 🔄', 'info');
+        this.showToast('Refresh', 'Refreshing dashboard... ??', 'info');
         setTimeout(async () => {
             await this.loadDashboardData();
             this.renderFocusItems();
             this.renderAchievements();
             this.updateTaskProgress();
             this.animateCounters();
-            this.showToast('Success', 'Dashboard refreshed! ✨', 'success');
-            this.addNotification('🔄 Dashboard refreshed');
+            this.showToast('Success', 'Dashboard refreshed! ?', 'success');
+            this.addNotification('?? Dashboard refreshed');
         }, 1000);
     }
 

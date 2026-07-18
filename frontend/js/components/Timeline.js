@@ -1,4 +1,4 @@
-﻿// js/components/Timeline.js
+// js/components/Timeline.js
 export class Timeline {
     constructor() {
         this.container = null;
@@ -9,7 +9,7 @@ export class Timeline {
         this.editingEventId = null;
         this.viewingEventId = null;
         this.events = [];
-        this.apiBase = 'http://localhost:5000/api/timeline';
+        this.apiBase = 'https://life-management-api.onrender.com/api/timeline';
         this.token = localStorage.getItem('access_token');
         this.deleteTargetId = null;
         this.formData = {};
@@ -26,7 +26,7 @@ export class Timeline {
             if (response.ok) {
                 const data = await response.json();
                 this.events = data.map(e => this.transformEvent(e));
-                console.log('✅ Timeline events loaded:', this.events);
+                console.log('? Timeline events loaded:', this.events);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -80,13 +80,13 @@ export class Timeline {
 
     getIconForType(type) {
         const icons = {
-            'career': '💼',
-            'achievement': '🏆',
-            'education': '🎓',
-            'personal': '🌟',
-            'life_event': '📌'
+            'career': '??',
+            'achievement': '??',
+            'education': '??',
+            'personal': '??',
+            'life_event': '??'
         };
-        return icons[type] || '📌';
+        return icons[type] || '??';
     }
 
     getColor(type) {
@@ -130,7 +130,7 @@ export class Timeline {
                     <div class="timeline-header-content">
                         <div>
                             <div class="timeline-badge">
-                                <span class="timeline-badge-icon">📅</span>
+                                <span class="timeline-badge-icon">??</span>
                                 <span class="timeline-badge-text">Life Timeline</span>
                             </div>
                             <h1 class="timeline-title">Your <span class="timeline-title-highlight">Journey</span> So Far</h1>
@@ -153,7 +153,7 @@ export class Timeline {
                         <div class="timeline-stat-divider"></div>
                         <div class="timeline-stat">
                             <span class="timeline-stat-number" style="color: var(--success);">${this.events.filter(e => e.isHighlight).length}</span>
-                            <span class="timeline-stat-label">🌟 Highlights</span>
+                            <span class="timeline-stat-label">?? Highlights</span>
                         </div>
                         <div class="timeline-stat-divider"></div>
                         <div class="timeline-stat">
@@ -233,16 +233,16 @@ export class Timeline {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Category</label>
                                     <select id="timelineTypeInput" class="form-control">
-                                        <option value="career">💼 Career</option>
-                                        <option value="achievement">🏆 Achievement</option>
-                                        <option value="education">🎓 Education</option>
-                                        <option value="personal">🌟 Personal</option>
-                                        <option value="life_event">📌 Life Event</option>
+                                        <option value="career">?? Career</option>
+                                        <option value="achievement">?? Achievement</option>
+                                        <option value="education">?? Education</option>
+                                        <option value="personal">?? Personal</option>
+                                        <option value="life_event">?? Life Event</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
                                     <label>Icon (emoji)</label>
-                                    <input type="text" id="timelineIconInput" class="form-control" value="📌" placeholder="📌">
+                                    <input type="text" id="timelineIconInput" class="form-control" value="??" placeholder="??">
                                 </div>
                             </div>
                             <div class="form-row">
@@ -262,7 +262,7 @@ export class Timeline {
                             <div class="form-group">
                                 <label style="display: flex; align-items: center; gap: 8px;">
                                     <input type="checkbox" id="timelineHighlightInput">
-                                    <span>🌟 Mark as Highlight</span>
+                                    <span>?? Mark as Highlight</span>
                                 </label>
                             </div>
                         </div>
@@ -309,7 +309,7 @@ export class Timeline {
                             </button>
                         </div>
                         <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                            <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                            <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                             <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                             <p style="color: var(--gray); margin-bottom: 20px;">
                                 This action cannot be undone. This will permanently delete this milestone.
@@ -345,7 +345,7 @@ export class Timeline {
         if (events.length === 0) {
             return `
                 <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                    <div class="empty-state-icon">🌟</div>
+                    <div class="empty-state-icon">??</div>
                     <h3 class="empty-state-title">No Milestones Found</h3>
                     <p class="empty-state-subtitle">Start documenting your journey by adding your first milestone!</p>
                     <button class="btn btn-primary btn-glow" id="timelineEmptyAddBtn">
@@ -382,7 +382,7 @@ export class Timeline {
                                 <div class="timeline-event-header">
                                     <div class="timeline-event-title-section">
                                         <h3 class="timeline-event-title">${event.title}</h3>
-                                        ${event.isHighlight ? '<span class="highlight-badge">🌟 Highlight</span>' : ''}
+                                        ${event.isHighlight ? '<span class="highlight-badge">?? Highlight</span>' : ''}
                                     </div>
                                     <div class="timeline-event-actions">
                                         <button class="btn btn-ghost btn-sm timeline-toggle-highlight" data-id="${event.id}" title="Toggle Highlight">
@@ -489,7 +489,7 @@ export class Timeline {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -501,7 +501,7 @@ export class Timeline {
             title: document.getElementById('timelineTitleInput')?.value || '',
             description: document.getElementById('timelineDescriptionInput')?.value || '',
             type: document.getElementById('timelineTypeInput')?.value || 'career',
-            icon: document.getElementById('timelineIconInput')?.value || '📌',
+            icon: document.getElementById('timelineIconInput')?.value || '??',
             month: document.getElementById('timelineMonthInput')?.value || '',
             year: document.getElementById('timelineYearInput')?.value || '',
             highlight: document.getElementById('timelineHighlightInput')?.checked || false
@@ -522,7 +522,7 @@ export class Timeline {
         document.getElementById('timelineTitleInput').value = '';
         document.getElementById('timelineDescriptionInput').value = '';
         document.getElementById('timelineTypeInput').value = 'career';
-        document.getElementById('timelineIconInput').value = '📌';
+        document.getElementById('timelineIconInput').value = '??';
         document.getElementById('timelineMonthInput').value = new Date().toLocaleDateString('en-US', { month: 'long' });
         document.getElementById('timelineYearInput').value = new Date().getFullYear();
         document.getElementById('timelineHighlightInput').checked = false;
@@ -592,7 +592,7 @@ export class Timeline {
             this.closeDeleteModal();
             await this.loadEvents();
             this.applyFilters();
-            this.showToast('🗑️ Milestone deleted', 'warning');
+            this.showToast('??? Milestone deleted', 'warning');
         }
     }
 
@@ -602,14 +602,14 @@ export class Timeline {
         const title = document.getElementById('timelineTitleInput').value.trim();
         const description = document.getElementById('timelineDescriptionInput').value.trim();
         const type = document.getElementById('timelineTypeInput').value;
-        const icon = document.getElementById('timelineIconInput').value.trim() || '📌';
+        const icon = document.getElementById('timelineIconInput').value.trim() || '??';
         const month = document.getElementById('timelineMonthInput').value;
         const year = document.getElementById('timelineYearInput').value;
         const isHighlight = document.getElementById('timelineHighlightInput').checked;
 
         if (!title) {
             document.getElementById('timelineTitleInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please enter a milestone title', 'error');
+            this.showToast('?? Please enter a milestone title', 'error');
             setTimeout(() => {
                 document.getElementById('timelineTitleInput').style.borderColor = '';
             }, 2000);
@@ -633,12 +633,12 @@ export class Timeline {
         if (this.editingEventId) {
             result = await this.apiRequest(`/events/${this.editingEventId}`, 'PUT', eventData);
             if (result) {
-                this.showToast('✅ Milestone updated successfully!', 'success');
+                this.showToast('? Milestone updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/events', 'POST', eventData);
             if (result) {
-                this.showToast('🌟 New milestone added to your timeline!', 'success');
+                this.showToast('?? New milestone added to your timeline!', 'success');
             }
         }
 
@@ -667,7 +667,7 @@ export class Timeline {
         if (result) {
             await this.loadEvents();
             this.applyFilters();
-            this.showToast(newHighlight ? '🌟 Marked as highlight!' : '⭐ Removed from highlights');
+            this.showToast(newHighlight ? '?? Marked as highlight!' : '? Removed from highlights');
         }
     }
 
@@ -675,7 +675,7 @@ export class Timeline {
         const event = this.events.find(e => e.id === id);
         if (!event) return;
 
-        const shareText = `📌 ${event.title}\n\n${event.description}\n\n📅 ${event.month} ${event.year}\n🏷️ ${event.type}\n${event.isHighlight ? '🌟 Highlight Event!' : ''}\n\n#Timeline #Milestone #Journey`;
+        const shareText = `?? ${event.title}\n\n${event.description}\n\n?? ${event.month} ${event.year}\n??? ${event.type}\n${event.isHighlight ? '?? Highlight Event!' : ''}\n\n#Timeline #Milestone #Journey`;
 
         if (navigator.share) {
             navigator.share({
@@ -684,7 +684,7 @@ export class Timeline {
             }).catch(() => {});
         } else {
             navigator.clipboard?.writeText(shareText).then(() => {
-                this.showToast('📋 Milestone copied to clipboard!');
+                this.showToast('?? Milestone copied to clipboard!');
             }).catch(() => {
                 prompt('Copy this milestone:', shareText);
             });
@@ -711,7 +711,7 @@ export class Timeline {
                         <span class="event-details-type" style="background: ${this.getColor(event.type)}20; color: ${this.getColor(event.type)};">
                             <i class="fas fa-tag"></i> ${event.type.charAt(0).toUpperCase() + event.type.slice(1)}
                         </span>
-                        ${event.isHighlight ? '<span class="event-details-highlight">🌟 Highlight</span>' : ''}
+                        ${event.isHighlight ? '<span class="event-details-highlight">?? Highlight</span>' : ''}
                     </div>
                 </div>
 

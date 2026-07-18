@@ -1,4 +1,4 @@
-﻿// js/components/Tasks.js
+// js/components/Tasks.js
 export class Tasks {
     constructor() {
         this.container = null;
@@ -9,7 +9,7 @@ export class Tasks {
         this.editingTaskId = null;
         this.viewingTaskId = null;
         this.tasks = [];
-        this.apiBase = 'http://localhost:5000/api/tasks';
+        this.apiBase = 'https://life-management-api.onrender.com/api/tasks';
         this.token = localStorage.getItem('access_token');
         this.formData = {};
         this.deleteTargetId = null;
@@ -26,7 +26,7 @@ export class Tasks {
             if (response.ok) {
                 const data = await response.json();
                 this.tasks = data.map(t => this.transformTask(t));
-                console.log('✅ Tasks loaded:', this.tasks);
+                console.log('? Tasks loaded:', this.tasks);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -100,16 +100,16 @@ export class Tasks {
 
     getEmojiForCategory(category) {
         const emojis = {
-            'Learning': '📚',
-            'Health': '🏋️',
-            'Career': '💼',
-            'Reading': '📖',
-            'Personal': '🌟',
-            'Other': '📌',
-            'General': '📌',
-            'Work': '💼'
+            'Learning': '??',
+            'Health': '???',
+            'Career': '??',
+            'Reading': '??',
+            'Personal': '??',
+            'Other': '??',
+            'General': '??',
+            'Work': '??'
         };
-        return emojis[category] || '📌';
+        return emojis[category] || '??';
     }
 
     getPriorityLabel(priority) {
@@ -138,9 +138,9 @@ export class Tasks {
 
     getPriorityLabelDisplay(priority) {
         const labels = {
-            'high': '🔥 High',
-            'medium': '⚡ Medium',
-            'low': '📌 Low'
+            'high': '?? High',
+            'medium': '? Medium',
+            'low': '?? Low'
         };
         return labels[priority] || priority;
     }
@@ -188,7 +188,7 @@ export class Tasks {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -227,7 +227,7 @@ export class Tasks {
                     <div class="tasks-header-content">
                         <div>
                             <div class="tasks-badge">
-                                <span class="tasks-badge-icon">✅</span>
+                                <span class="tasks-badge-icon">?</span>
                                 <span class="tasks-badge-text">Task Manager</span>
                             </div>
                             <h1 class="tasks-title">Your <span class="tasks-title-highlight">Tasks</span> Hub</h1>
@@ -250,17 +250,17 @@ export class Tasks {
                         <div class="task-stat-divider"></div>
                         <div class="task-stat">
                             <span class="task-stat-number" style="color: var(--success);">${this.tasks.filter(t => t.status === 'completed').length}</span>
-                            <span class="task-stat-label">Completed ✅</span>
+                            <span class="task-stat-label">Completed ?</span>
                         </div>
                         <div class="task-stat-divider"></div>
                         <div class="task-stat">
                             <span class="task-stat-number" style="color: var(--warning);">${this.tasks.filter(t => t.status === 'in_progress').length}</span>
-                            <span class="task-stat-label">In Progress 🔄</span>
+                            <span class="task-stat-label">In Progress ??</span>
                         </div>
                         <div class="task-stat-divider"></div>
                         <div class="task-stat">
                             <span class="task-stat-number" style="color: var(--gray);">${this.tasks.filter(t => t.status === 'pending').length}</span>
-                            <span class="task-stat-label">Pending ⏳</span>
+                            <span class="task-stat-label">Pending ?</span>
                         </div>
                         <div class="task-stat-divider"></div>
                         <div class="task-stat">
@@ -299,9 +299,9 @@ export class Tasks {
                             <label>Priority</label>
                             <div class="filter-buttons" id="tasksPriorityFilters">
                                 <button class="filter-btn active" data-priority="all">All</button>
-                                <button class="filter-btn" data-priority="high">🔥 High</button>
-                                <button class="filter-btn" data-priority="medium">⚡ Medium</button>
-                                <button class="filter-btn" data-priority="low">📌 Low</button>
+                                <button class="filter-btn" data-priority="high">?? High</button>
+                                <button class="filter-btn" data-priority="medium">? Medium</button>
+                                <button class="filter-btn" data-priority="low">?? Low</button>
                             </div>
                         </div>
                     </div>
@@ -337,20 +337,20 @@ export class Tasks {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Category</label>
                                     <select id="tasksCategoryInput" class="form-control">
-                                        <option value="Learning">📚 Learning</option>
-                                        <option value="Health">🏋️ Health</option>
-                                        <option value="Career">💼 Career</option>
-                                        <option value="Reading">📖 Reading</option>
-                                        <option value="Personal">🌟 Personal</option>
-                                        <option value="Other">📌 Other</option>
+                                        <option value="Learning">?? Learning</option>
+                                        <option value="Health">??? Health</option>
+                                        <option value="Career">?? Career</option>
+                                        <option value="Reading">?? Reading</option>
+                                        <option value="Personal">?? Personal</option>
+                                        <option value="Other">?? Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
                                     <label>Priority</label>
                                     <select id="tasksPriorityInput" class="form-control">
-                                        <option value="high">🔥 High</option>
-                                        <option value="medium" selected>⚡ Medium</option>
-                                        <option value="low">📌 Low</option>
+                                        <option value="high">?? High</option>
+                                        <option value="medium" selected>? Medium</option>
+                                        <option value="low">?? Low</option>
                                     </select>
                                 </div>
                             </div>
@@ -358,9 +358,9 @@ export class Tasks {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Status</label>
                                     <select id="tasksStatusInput" class="form-control">
-                                        <option value="pending">⏳ Pending</option>
-                                        <option value="in_progress">🔄 In Progress</option>
-                                        <option value="completed">✅ Completed</option>
+                                        <option value="pending">? Pending</option>
+                                        <option value="in_progress">?? In Progress</option>
+                                        <option value="completed">? Completed</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
@@ -424,7 +424,7 @@ export class Tasks {
                             </button>
                         </div>
                         <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                            <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                            <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                             <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                             <p style="color: var(--gray); margin-bottom: 20px;">
                                 This action cannot be undone. This will permanently delete the task and all its data.
@@ -459,7 +459,7 @@ export class Tasks {
         if (tasks.length === 0) {
             return `
                 <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                    <div class="empty-state-icon">🎯</div>
+                    <div class="empty-state-icon">??</div>
                     <h3 class="empty-state-title">No Tasks Found</h3>
                     <p class="empty-state-subtitle">Start organizing your day by creating your first task!</p>
                     <button class="btn btn-primary btn-glow" id="tasksEmptyAddBtn">
@@ -674,7 +674,7 @@ export class Tasks {
             this.closeDeleteModal();
             await this.loadTasks();
             this.applyFilters();
-            this.showToast('🗑️ Task deleted successfully', 'warning');
+            this.showToast('??? Task deleted successfully', 'warning');
         }
     }
 
@@ -693,7 +693,7 @@ export class Tasks {
 
         if (!title) {
             document.getElementById('tasksTitleInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please enter a task title', 'error');
+            this.showToast('?? Please enter a task title', 'error');
             setTimeout(() => {
                 document.getElementById('tasksTitleInput').style.borderColor = '';
             }, 2000);
@@ -726,12 +726,12 @@ export class Tasks {
         if (this.editingTaskId) {
             result = await this.apiRequest(`/${this.editingTaskId}`, 'PUT', taskData);
             if (result) {
-                this.showToast('✅ Task updated successfully!', 'success');
+                this.showToast('? Task updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/', 'POST', taskData);
             if (result) {
-                this.showToast('✅ New task created successfully!', 'success');
+                this.showToast('? New task created successfully!', 'success');
             }
         }
 
@@ -754,7 +754,7 @@ export class Tasks {
             if (result) {
                 await this.loadTasks();
                 this.applyFilters();
-                this.showToast(completed ? '🎉 Task completed!' : '⏳ Task reopened');
+                this.showToast(completed ? '?? Task completed!' : '? Task reopened');
             }
         }
     }
@@ -803,7 +803,7 @@ export class Tasks {
         if (result) {
             await this.loadTasks();
             this.applyFilters();
-            this.showToast('📋 Task duplicated successfully!');
+            this.showToast('?? Task duplicated successfully!');
         }
     }
 
@@ -826,9 +826,9 @@ export class Tasks {
             this.applyFilters();
             
             const messages = {
-                'pending': '⏳ Task marked as pending',
-                'in_progress': '🔄 Task marked as in progress',
-                'completed': '🎉 Task completed! Congratulations!'
+                'pending': '? Task marked as pending',
+                'in_progress': '?? Task marked as in progress',
+                'completed': '?? Task completed! Congratulations!'
             };
             this.showToast(messages[newStatus] || 'Status updated', 'success');
         }
@@ -843,9 +843,9 @@ export class Tasks {
         this.viewingTaskId = id;
         
         const statusEmoji = {
-            'pending': '⏳',
-            'in_progress': '🔄',
-            'completed': '✅'
+            'pending': '?',
+            'in_progress': '??',
+            'completed': '?'
         };
 
         const statusColors = {
@@ -855,9 +855,9 @@ export class Tasks {
         };
 
         const priorityEmojis = {
-            'high': '🔥',
-            'medium': '⚡',
-            'low': '📌'
+            'high': '??',
+            'medium': '?',
+            'low': '??'
         };
 
         const body = document.getElementById('tasksDetailsBody');
@@ -917,7 +917,7 @@ export class Tasks {
                         <div class="task-details-subtask-list">
                             ${task.subtasks.map(subtask => `
                                 <div class="task-details-subtask ${subtask.completed ? 'completed' : ''}">
-                                    <span class="subtask-status">${subtask.completed ? '✅' : '⏳'}</span>
+                                    <span class="subtask-status">${subtask.completed ? '?' : '?'}</span>
                                     <span>${subtask.title}</span>
                                 </div>
                             `).join('')}

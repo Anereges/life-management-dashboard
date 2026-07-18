@@ -1,4 +1,4 @@
-﻿// js/components/Inspiration.js
+// js/components/Inspiration.js
 export class Inspiration {
     constructor() {
         this.container = null;
@@ -8,7 +8,7 @@ export class Inspiration {
         this.editingImageId = null;
         this.viewingImageId = null;
         this.images = [];
-        this.apiBase = 'http://localhost:5000/api/inspiration';
+        this.apiBase = 'https://life-management-api.onrender.com/api/inspiration';
         this.token = localStorage.getItem('access_token');
         this.deleteTargetId = null;
         this.formData = {};
@@ -29,7 +29,7 @@ export class Inspiration {
                 category: "Motivation"
             },
             {
-                text: "Your limitation—it's only your imagination.",
+                text: "Your limitation�it's only your imagination.",
                 author: "Anonymous",
                 category: "Mindset"
             },
@@ -152,7 +152,7 @@ export class Inspiration {
             if (response.ok) {
                 const data = await response.json();
                 this.images = data.map(i => this.transformImage(i));
-                console.log('✅ Inspiration images loaded:', this.images.length);
+                console.log('? Inspiration images loaded:', this.images.length);
             } else if (response.status === 401) {
                 this.showToast('Session expired. Please login again.', 'error');
                 setTimeout(() => {
@@ -240,7 +240,7 @@ export class Inspiration {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -318,13 +318,13 @@ export class Inspiration {
                 <div class="inspiration-orb inspiration-orb-2"></div>
                 <div class="inspiration-orb inspiration-orb-3"></div>
                 <div class="floating-shapes">
-                    <div class="shape shape-1">✦</div>
-                    <div class="shape shape-2">✧</div>
-                    <div class="shape shape-3">★</div>
-                    <div class="shape shape-4">✿</div>
-                    <div class="shape shape-5">✦</div>
-                    <div class="shape shape-6">✧</div>
-                    <div class="shape shape-7">★</div>
+                    <div class="shape shape-1">?</div>
+                    <div class="shape shape-2">?</div>
+                    <div class="shape shape-3">?</div>
+                    <div class="shape shape-4">?</div>
+                    <div class="shape shape-5">?</div>
+                    <div class="shape shape-6">?</div>
+                    <div class="shape shape-7">?</div>
                 </div>
             </div>
         `;
@@ -336,7 +336,7 @@ export class Inspiration {
                 <div class="inspiration-header-content">
                     <div>
                         <div class="inspiration-badge">
-                            <span class="inspiration-badge-icon">✨</span>
+                            <span class="inspiration-badge-icon">?</span>
                             <span class="inspiration-badge-text">Vision Board</span>
                         </div>
                         <h1 class="inspiration-title">
@@ -379,7 +379,7 @@ export class Inspiration {
                         </div>
                         <div class="stat-content">
                             <span class="inspiration-stat-number" style="color: #FFD700;">${favorites}</span>
-                            <span class="inspiration-stat-label">⭐ Favorites</span>
+                            <span class="inspiration-stat-label">? Favorites</span>
                         </div>
                     </div>
                     <div class="inspiration-stat">
@@ -414,9 +414,9 @@ export class Inspiration {
                         <i class="fas fa-lightbulb"></i>
                     </div>
                     <div class="daily-inspiration-text">
-                        <span class="daily-label">✨ Daily Inspiration</span>
+                        <span class="daily-label">? Daily Inspiration</span>
                         <p class="daily-quote" id="inspirationDailyQuote">"${quote.text}"</p>
-                        <p class="daily-author">— ${quote.author}</p>
+                        <p class="daily-author">� ${quote.author}</p>
                         ${quote.category ? `<span class="daily-category">${quote.category}</span>` : ''}
                     </div>
                     <div class="daily-inspiration-controls">
@@ -440,7 +440,7 @@ export class Inspiration {
         const sortOptions = [
             { value: 'newest', label: 'Newest' },
             { value: 'oldest', label: 'Oldest' },
-            { value: 'favorites', label: '⭐ Favorites' },
+            { value: 'favorites', label: '? Favorites' },
             { value: 'alphabetical', label: 'A-Z' },
             { value: 'category', label: 'By Category' }
         ];
@@ -564,7 +564,7 @@ export class Inspiration {
                     <span class="inspiration-date">
                         <i class="fas fa-calendar-alt"></i> ${this.formatDate(image.createdAt)}
                     </span>
-                    ${image.isFavorite ? '<span class="inspiration-favorite-badge">⭐ Favorite</span>' : ''}
+                    ${image.isFavorite ? '<span class="inspiration-favorite-badge">? Favorite</span>' : ''}
                 </div>
                 
                 <div class="inspiration-card-footer">
@@ -582,7 +582,7 @@ export class Inspiration {
     renderEmptyState() {
         return `
             <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                <div class="empty-state-icon">🌈</div>
+                <div class="empty-state-icon">??</div>
                 <h3 class="empty-state-title">No Visions Found</h3>
                 <p class="empty-state-subtitle">Start creating your vision board by adding your dreams!</p>
                 <button class="btn btn-primary btn-glow" id="inspirationEmptyAddBtn">
@@ -654,7 +654,7 @@ export class Inspiration {
                             <div class="form-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="inspirationFavoriteInput">
-                                    <span>⭐ Mark as Favorite</span>
+                                    <span>? Mark as Favorite</span>
                                 </label>
                             </div>
                         </form>
@@ -711,7 +711,7 @@ export class Inspiration {
                         </button>
                     </div>
                     <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                        <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                        <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                         <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                         <p style="color: var(--gray); margin-bottom: 20px;">
                             This action cannot be undone. This will permanently delete this vision.
@@ -887,7 +887,7 @@ export class Inspiration {
             
             setTimeout(() => {
                 quoteElement.textContent = `"${quote.text}"`;
-                authorElement.textContent = `— ${quote.author}`;
+                authorElement.textContent = `� ${quote.author}`;
                 if (categoryElement && quote.category) {
                     categoryElement.textContent = quote.category;
                     categoryElement.style.display = 'inline-block';
@@ -1021,7 +1021,7 @@ export class Inspiration {
             this.closeDeleteModal();
             await this.loadImages();
             this.applyFilters();
-            this.showToast('🗑️ Vision deleted successfully', 'warning');
+            this.showToast('??? Vision deleted successfully', 'warning');
         }
     }
 
@@ -1039,7 +1039,7 @@ export class Inspiration {
             const input = document.getElementById('inspirationTitleInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('⚠️ Please enter a vision title', 'error');
+            this.showToast('?? Please enter a vision title', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1052,7 +1052,7 @@ export class Inspiration {
             const input = document.getElementById('inspirationIconInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('⚠️ Please enter a valid Font Awesome icon (e.g., fa-star)', 'error');
+            this.showToast('?? Please enter a valid Font Awesome icon (e.g., fa-star)', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1073,12 +1073,12 @@ export class Inspiration {
         if (this.editingImageId) {
             result = await this.apiRequest(`/images/${this.editingImageId}`, 'PUT', visionData);
             if (result) {
-                this.showToast('✅ Vision updated successfully!', 'success');
+                this.showToast('? Vision updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/images', 'POST', visionData);
             if (result) {
-                this.showToast('✨ New vision added to your inspiration board!', 'success');
+                this.showToast('? New vision added to your inspiration board!', 'success');
                 this.celebrate();
             }
         }
@@ -1115,7 +1115,7 @@ export class Inspiration {
         if (result) {
             await this.loadImages();
             this.applyFilters();
-            this.showToast(newFavorite ? '⭐ Added to favorites!' : '⭐ Removed from favorites', 'info');
+            this.showToast(newFavorite ? '? Added to favorites!' : '? Removed from favorites', 'info');
         }
     }
 
@@ -1123,7 +1123,7 @@ export class Inspiration {
         const image = this.images.find(i => i.id === id);
         if (!image) return;
 
-        const shareText = `🌟 ${image.title}\n\n${image.description || 'No description'}\n\n📂 ${image.category}\n${image.isFavorite ? '⭐ Favorite Vision' : ''}\n\n✨ My vision for the future! #Inspiration #Dreams #Goals`;
+        const shareText = `?? ${image.title}\n\n${image.description || 'No description'}\n\n?? ${image.category}\n${image.isFavorite ? '? Favorite Vision' : ''}\n\n? My vision for the future! #Inspiration #Dreams #Goals`;
 
         if (navigator.share) {
             try {
@@ -1139,7 +1139,7 @@ export class Inspiration {
         } else {
             try {
                 await navigator.clipboard.writeText(shareText);
-                this.showToast('📋 Vision copied to clipboard!', 'success');
+                this.showToast('?? Vision copied to clipboard!', 'success');
             } catch (err) {
                 // Fallback
                 const textarea = document.createElement('textarea');
@@ -1148,7 +1148,7 @@ export class Inspiration {
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                this.showToast('📋 Vision copied to clipboard!', 'success');
+                this.showToast('?? Vision copied to clipboard!', 'success');
             }
         }
     }
@@ -1175,7 +1175,7 @@ export class Inspiration {
                         <span class="vision-details-category" style="background: ${color}20; color: ${color};">
                             <i class="fas ${this.getCategoryIcon(image.category)}"></i> ${image.category}
                         </span>
-                        ${image.isFavorite ? '<span class="vision-details-favorite">⭐ Favorite</span>' : ''}
+                        ${image.isFavorite ? '<span class="vision-details-favorite">? Favorite</span>' : ''}
                     </div>
                 </div>
 

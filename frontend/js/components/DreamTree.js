@@ -1,4 +1,4 @@
-﻿// js/components/DreamTree.js
+// js/components/DreamTree.js
 export class DreamTree {
     constructor() {
         this.container = null;
@@ -6,7 +6,7 @@ export class DreamTree {
         this.currentProgressFilter = 'all';
         this.editingNodeId = null;
         this.treeData = [];
-        this.apiBase = 'http://localhost:5000/api/goals';
+        this.apiBase = 'https://life-management-api.onrender.com/api/goals';
         this.token = localStorage.getItem('access_token');
         this.deleteTargetId = null;
         this.formData = {};
@@ -24,7 +24,7 @@ export class DreamTree {
             if (response.ok) {
                 const data = await response.json();
                 this.treeData = this.transformTreeData(data);
-                console.log('✅ Dream tree loaded:', this.treeData);
+                console.log('? Dream tree loaded:', this.treeData);
             } else if (response.status === 401) {
                 window.location.href = '/login.html';
             } else {
@@ -43,7 +43,7 @@ export class DreamTree {
         this.treeData = [
             {
                 id: 1,
-                title: '🌳 Become Cybersecurity Engineer',
+                title: '?? Become Cybersecurity Engineer',
                 status: 'in_progress',
                 progress: 65,
                 description: 'Build a successful career in cybersecurity and protect the digital world',
@@ -99,7 +99,7 @@ export class DreamTree {
             },
             {
                 id: 11,
-                title: '💪 Health & Wellness',
+                title: '?? Health & Wellness',
                 status: 'in_progress',
                 progress: 40,
                 description: 'Build a healthy lifestyle and maintain fitness',
@@ -112,7 +112,7 @@ export class DreamTree {
             },
             {
                 id: 16,
-                title: '📚 Continuous Learning',
+                title: '?? Continuous Learning',
                 status: 'in_progress',
                 progress: 55,
                 description: 'Never stop learning and growing',
@@ -144,11 +144,11 @@ export class DreamTree {
 
     getEmojiForStatus(status) {
         const emojis = {
-            'completed': '✅',
-            'in_progress': '🌱',
-            'pending': '🌰'
+            'completed': '?',
+            'in_progress': '??',
+            'pending': '??'
         };
-        return emojis[status] || '🌱';
+        return emojis[status] || '??';
     }
 
     async render() {
@@ -163,11 +163,11 @@ export class DreamTree {
                     <div class="dreamtree-orb dreamtree-orb-2"></div>
                     <div class="dreamtree-orb dreamtree-orb-3"></div>
                     <div class="dreamtree-leaves">
-                        <div class="leaf leaf-1">🌿</div>
-                        <div class="leaf leaf-2">🌱</div>
-                        <div class="leaf leaf-3">🍃</div>
-                        <div class="leaf leaf-4">🌿</div>
-                        <div class="leaf leaf-5">🍂</div>
+                        <div class="leaf leaf-1">??</div>
+                        <div class="leaf leaf-2">??</div>
+                        <div class="leaf leaf-3">??</div>
+                        <div class="leaf leaf-4">??</div>
+                        <div class="leaf leaf-5">??</div>
                     </div>
                 </div>
 
@@ -176,7 +176,7 @@ export class DreamTree {
                     <div class="dreamtree-header-content">
                         <div>
                             <div class="dreamtree-badge">
-                                <span class="dreamtree-badge-icon">🌳</span>
+                                <span class="dreamtree-badge-icon">??</span>
                                 <span class="dreamtree-badge-text">Dream Tree</span>
                             </div>
                             <h1 class="dreamtree-title">Grow Your <span class="dreamtree-title-highlight">Dreams</span></h1>
@@ -199,17 +199,17 @@ export class DreamTree {
                         <div class="dreamtree-stat-divider"></div>
                         <div class="dreamtree-stat">
                             <span class="dreamtree-stat-number" style="color: var(--success);">${this.getCompletedCount()}</span>
-                            <span class="dreamtree-stat-label">✅ Bloomed</span>
+                            <span class="dreamtree-stat-label">? Bloomed</span>
                         </div>
                         <div class="dreamtree-stat-divider"></div>
                         <div class="dreamtree-stat">
                             <span class="dreamtree-stat-number" style="color: var(--warning);">${this.getInProgressCount()}</span>
-                            <span class="dreamtree-stat-label">🌱 Growing</span>
+                            <span class="dreamtree-stat-label">?? Growing</span>
                         </div>
                         <div class="dreamtree-stat-divider"></div>
                         <div class="dreamtree-stat">
                             <span class="dreamtree-stat-number" style="color: var(--gray);">${this.getPendingCount()}</span>
-                            <span class="dreamtree-stat-label">🌰 Seeds</span>
+                            <span class="dreamtree-stat-label">?? Seeds</span>
                         </div>
                         <div class="dreamtree-stat-divider"></div>
                         <div class="dreamtree-stat">
@@ -225,19 +225,19 @@ export class DreamTree {
                         <div class="filter-group">
                             <label>Status</label>
                             <div class="filter-buttons" id="dreamStatusFilters">
-                                <button class="filter-btn active" data-filter="all">🌳 All</button>
-                                <button class="filter-btn" data-filter="completed">✅ Bloomed</button>
-                                <button class="filter-btn" data-filter="in_progress">🌱 Growing</button>
-                                <button class="filter-btn" data-filter="pending">🌰 Seeds</button>
+                                <button class="filter-btn active" data-filter="all">?? All</button>
+                                <button class="filter-btn" data-filter="completed">? Bloomed</button>
+                                <button class="filter-btn" data-filter="in_progress">?? Growing</button>
+                                <button class="filter-btn" data-filter="pending">?? Seeds</button>
                             </div>
                         </div>
                         <div class="filter-group">
                             <label>Progress</label>
                             <div class="filter-buttons" id="dreamProgressFilters">
                                 <button class="filter-btn active" data-progress="all">All</button>
-                                <button class="filter-btn" data-progress="high">🚀 High (70%+)</button>
-                                <button class="filter-btn" data-progress="medium">⚡ Medium (30-69%)</button>
-                                <button class="filter-btn" data-progress="low">🐢 Low (&lt;30%)</button>
+                                <button class="filter-btn" data-progress="high">?? High (70%+)</button>
+                                <button class="filter-btn" data-progress="medium">? Medium (30-69%)</button>
+                                <button class="filter-btn" data-progress="low">?? Low (&lt;30%)</button>
                             </div>
                         </div>
                     </div>
@@ -289,9 +289,9 @@ export class DreamTree {
                                 <div class="form-group" style="flex: 1;">
                                     <label>Status</label>
                                     <select id="dreamStatusInput" class="form-control">
-                                        <option value="pending">🌰 Seed</option>
-                                        <option value="in_progress" selected>🌱 Growing</option>
-                                        <option value="completed">✅ Bloomed</option>
+                                        <option value="pending">?? Seed</option>
+                                        <option value="in_progress" selected>?? Growing</option>
+                                        <option value="completed">? Bloomed</option>
                                     </select>
                                 </div>
                                 <div class="form-group" style="flex: 1;">
@@ -329,7 +329,7 @@ export class DreamTree {
                             </button>
                         </div>
                         <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                            <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                            <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
                             <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                             <p style="color: var(--gray); margin-bottom: 20px;">
                                 This action cannot be undone. This will permanently delete this dream and all its branches.
@@ -367,7 +367,7 @@ export class DreamTree {
             nodes.forEach(node => {
                 options += `<option value="${node.id}">${prefix}${node.title}</option>`;
                 if (node.children) {
-                    flatten(node.children, prefix + '— ');
+                    flatten(node.children, prefix + '� ');
                 }
             });
         };
@@ -468,11 +468,11 @@ export class DreamTree {
 
     getStatusIcon(status) {
         const icons = {
-            'completed': '✅',
-            'in_progress': '🌱',
-            'pending': '🌰'
+            'completed': '?',
+            'in_progress': '??',
+            'pending': '??'
         };
-        return icons[status] || '🌱';
+        return icons[status] || '??';
     }
 
     getStatusLabel(status) {
@@ -579,7 +579,7 @@ export class DreamTree {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('⚠️ Network error. Please try again.', 'error');
+            this.showToast('?? Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -688,7 +688,7 @@ export class DreamTree {
             this.closeDeleteModal();
             await this.loadTreeData();
             this.applyFilters();
-            this.showToast('🗑️ Dream removed from your forest', 'warning');
+            this.showToast('??? Dream removed from your forest', 'warning');
         }
     }
 
@@ -709,7 +709,7 @@ export class DreamTree {
 
         if (!title) {
             document.getElementById('dreamTitleInput').style.borderColor = 'var(--danger)';
-            this.showToast('⚠️ Please enter a dream title', 'error');
+            this.showToast('?? Please enter a dream title', 'error');
             setTimeout(() => {
                 document.getElementById('dreamTitleInput').style.borderColor = '';
             }, 2000);
@@ -729,12 +729,12 @@ export class DreamTree {
         if (this.editingNodeId) {
             result = await this.apiRequest(`/${this.editingNodeId}`, 'PUT', goalData);
             if (result) {
-                this.showToast('✅ Dream updated successfully!', 'success');
+                this.showToast('? Dream updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/', 'POST', goalData);
             if (result) {
-                this.showToast('🌱 New dream planted! Watch it grow!', 'success');
+                this.showToast('?? New dream planted! Watch it grow!', 'success');
             }
         }
 

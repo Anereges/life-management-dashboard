@@ -1,4 +1,4 @@
-﻿// js/components/LegacyBot.js
+// js/components/LegacyBot.js
 export class LegacyBot {
     constructor() {
         this.container = null;
@@ -8,7 +8,7 @@ export class LegacyBot {
             {
                 id: 1,
                 sender: 'bot',
-                text: '👋 Hello! I\'m your Legacy Bot, your personal guide and mentor.',
+                text: '?? Hello! I\'m your Legacy Bot, your personal guide and mentor.',
                 timestamp: new Date().toISOString()
             },
             {
@@ -19,7 +19,7 @@ export class LegacyBot {
             }
         ];
         
-        this.apiBase = 'http://localhost:5000/api/legacy_bot';
+        this.apiBase = 'https://life-management-api.onrender.com/api/legacy_bot';
         this.token = localStorage.getItem('access_token');
         this.userName = 'Aman';
         this.conversationContext = [];
@@ -44,7 +44,7 @@ export class LegacyBot {
                     <div class="legacybot-header-content">
                         <div>
                             <div class="legacybot-badge">
-                                <span class="legacybot-badge-icon">🤖</span>
+                                <span class="legacybot-badge-icon">??</span>
                                 <span class="legacybot-badge-text">AI Legacy Guide</span>
                             </div>
                             <h1 class="legacybot-title">Your <span class="legacybot-title-highlight">Legacy</span> Bot</h1>
@@ -68,17 +68,17 @@ export class LegacyBot {
                     <div class="legacybot-stats">
                         <div class="legacybot-stat">
                             <span class="legacybot-stat-number">${this.messages.filter(m => m.sender === 'bot').length}</span>
-                            <span class="legacybot-stat-label">💬 Messages</span>
+                            <span class="legacybot-stat-label">?? Messages</span>
                         </div>
                         <div class="legacybot-stat-divider"></div>
                         <div class="legacybot-stat">
                             <span class="legacybot-stat-number">${this.messages.filter(m => m.sender === 'user').length}</span>
-                            <span class="legacybot-stat-label">👤 Questions</span>
+                            <span class="legacybot-stat-label">?? Questions</span>
                         </div>
                         <div class="legacybot-stat-divider"></div>
                         <div class="legacybot-stat">
                             <span class="legacybot-stat-number" style="color: var(--success);">Active</span>
-                            <span class="legacybot-stat-label">🟢 Status</span>
+                            <span class="legacybot-stat-label">?? Status</span>
                         </div>
                     </div>
                 </div>
@@ -109,13 +109,13 @@ export class LegacyBot {
                     
                     <div class="chat-input-area">
                         <div class="quick-suggestions" id="legacyQuickSuggestions">
-                            <button class="suggestion-btn" data-question="Give me some motivation">💪 Motivation</button>
-                            <button class="suggestion-btn" data-question="What advice do you have for me?">🧠 Advice</button>
-                            <button class="suggestion-btn" data-question="How can I achieve my goals?">🎯 Goals</button>
-                            <button class="suggestion-btn" data-question="What should I be grateful for?">🙏 Gratitude</button>
-                            <button class="suggestion-btn" data-question="How do I build my legacy?">🏛️ Legacy</button>
-                            <button class="suggestion-btn" data-question="I'm struggling, can you help?">💙 Support</button>
-                            <button class="suggestion-btn" data-question="How can I grow and improve?">🌱 Growth</button>
+                            <button class="suggestion-btn" data-question="Give me some motivation">?? Motivation</button>
+                            <button class="suggestion-btn" data-question="What advice do you have for me?">?? Advice</button>
+                            <button class="suggestion-btn" data-question="How can I achieve my goals?">?? Goals</button>
+                            <button class="suggestion-btn" data-question="What should I be grateful for?">?? Gratitude</button>
+                            <button class="suggestion-btn" data-question="How do I build my legacy?">??? Legacy</button>
+                            <button class="suggestion-btn" data-question="I'm struggling, can you help?">?? Support</button>
+                            <button class="suggestion-btn" data-question="How can I grow and improve?">?? Growth</button>
                         </div>
                         <div class="chat-input-wrapper">
                             <div class="chat-input-container">
@@ -125,7 +125,7 @@ export class LegacyBot {
                                 </button>
                             </div>
                             <div class="chat-input-footer">
-                                <span class="input-hint">Press <kbd>Enter</kbd> to send · <kbd>/</kbd> to focus</span>
+                                <span class="input-hint">Press <kbd>Enter</kbd> to send � <kbd>/</kbd> to focus</span>
                                 <span class="input-char-count" id="legacyCharCount">0/500</span>
                             </div>
                         </div>
@@ -276,12 +276,12 @@ export class LegacyBot {
                     {
                         id: Date.now(),
                         sender: 'bot',
-                        text: '👋 Chat cleared. How can I help you today?',
+                        text: '?? Chat cleared. How can I help you today?',
                         timestamp: new Date().toISOString()
                     }
                 ];
                 this.updateMessages();
-                this.showToast('💬 Chat cleared', 'info');
+                this.showToast('?? Chat cleared', 'info');
             }
         });
 
@@ -295,7 +295,7 @@ export class LegacyBot {
                     {
                         id: Date.now(),
                         sender: 'bot',
-                        text: '👋 Hello! I\'m your Legacy Bot, your personal guide and mentor.',
+                        text: '?? Hello! I\'m your Legacy Bot, your personal guide and mentor.',
                         timestamp: new Date().toISOString()
                     },
                     {
@@ -306,7 +306,7 @@ export class LegacyBot {
                     }
                 ];
                 this.updateMessages();
-                this.showToast('🔄 Bot reset successfully', 'success');
+                this.showToast('?? Bot reset successfully', 'success');
             }
         });
 
@@ -367,10 +367,10 @@ export class LegacyBot {
             this.updateMessages();
             
             if (question.toLowerCase().includes('thank') || question.toLowerCase().includes('grateful')) {
-                this.showToast('🙏 Gratitude is beautiful!', 'success');
+                this.showToast('?? Gratitude is beautiful!', 'success');
             }
             if (question.toLowerCase().includes('complete') || question.toLowerCase().includes('done')) {
-                this.showToast('🎉 Celebration time!', 'success');
+                this.showToast('?? Celebration time!', 'success');
             }
         } else {
             // Fallback response if API fails
@@ -389,27 +389,27 @@ export class LegacyBot {
         const lowerQuestion = question.toLowerCase();
         
         const responses = [
-            "💭 That's a great question! Let me think about it...",
-            "🌟 I appreciate your curiosity! Every question brings you closer to understanding yourself better.",
-            "🤔 Interesting question! Here's my perspective on that...",
-            "💡 Your questions show deep reflection. Keep exploring!",
-            "🌈 Life is a beautiful journey of discovery. Thank you for asking!"
+            "?? That's a great question! Let me think about it...",
+            "?? I appreciate your curiosity! Every question brings you closer to understanding yourself better.",
+            "?? Interesting question! Here's my perspective on that...",
+            "?? Your questions show deep reflection. Keep exploring!",
+            "?? Life is a beautiful journey of discovery. Thank you for asking!"
         ];
         
         if (lowerQuestion.includes('motivation') || lowerQuestion.includes('inspire')) {
-            return "💪 You're capable of amazing things! Every small step today builds your tomorrow. Keep pushing forward!";
+            return "?? You're capable of amazing things! Every small step today builds your tomorrow. Keep pushing forward!";
         } else if (lowerQuestion.includes('advice')) {
-            return "🧠 My advice: Trust the process. Be patient with yourself. Growth takes time, but you're on the right path.";
+            return "?? My advice: Trust the process. Be patient with yourself. Growth takes time, but you're on the right path.";
         } else if (lowerQuestion.includes('goal')) {
-            return "🎯 Break your goals into small, daily actions. Consistency compounds. You've got this!";
+            return "?? Break your goals into small, daily actions. Consistency compounds. You've got this!";
         } else if (lowerQuestion.includes('grateful')) {
-            return "🙏 Gratitude transforms perspective. Start each day with three things you're thankful for.";
+            return "?? Gratitude transforms perspective. Start each day with three things you're thankful for.";
         } else if (lowerQuestion.includes('legacy')) {
-            return "🏛️ Your legacy is built through daily choices. Live with purpose, and your impact will outlast you.";
+            return "??? Your legacy is built through daily choices. Live with purpose, and your impact will outlast you.";
         } else if (lowerQuestion.includes('struggle') || lowerQuestion.includes('hard')) {
-            return "💙 You're not alone in this. Every challenge is an opportunity to grow. Keep going, you're stronger than you think!";
+            return "?? You're not alone in this. Every challenge is an opportunity to grow. Keep going, you're stronger than you think!";
         } else if (lowerQuestion.includes('grow') || lowerQuestion.includes('improve')) {
-            return "🌱 Growth happens outside your comfort zone. Embrace the journey, learn from every experience, and keep evolving.";
+            return "?? Growth happens outside your comfort zone. Embrace the journey, learn from every experience, and keep evolving.";
         }
         
         return responses[Math.floor(Math.random() * responses.length)];
@@ -485,7 +485,7 @@ export class LegacyBot {
             return `[${time}] ${sender}: ${msg.text}`;
         }).join('\n\n');
 
-        const header = `🤖 Legacy Bot Chat Export\n${new Date().toLocaleString()}\n${'='.repeat(50)}\n\n`;
+        const header = `?? Legacy Bot Chat Export\n${new Date().toLocaleString()}\n${'='.repeat(50)}\n\n`;
         const fullText = header + chatText;
 
         const blob = new Blob([fullText], { type: 'text/plain' });
@@ -498,7 +498,7 @@ export class LegacyBot {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        this.showToast('📥 Chat exported successfully!', 'success');
+        this.showToast('?? Chat exported successfully!', 'success');
     }
 
     // ============ PARTICLES ============
