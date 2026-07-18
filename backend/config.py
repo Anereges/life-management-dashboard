@@ -32,7 +32,10 @@ class Config:
     AI_MODEL = 'gpt-3.5-turbo'
     
     # JWT settings - use consistent secret key
-    JWT_SECRET_KEY = 'jwt-secret-key-minimum-32-characters-long-1234567890'
+    JWT_SECRET_KEY = os.environ.get(
+    'JWT_SECRET_KEY',
+    'dev-jwt-secret-key-change-this'
+)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     
