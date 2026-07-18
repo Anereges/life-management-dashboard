@@ -53,22 +53,16 @@ def create_app(config_name="production"):
     # -------------------------------------------------------------------------
 
     CORS(
-        app,
-        resources={
-            r"/api/*": {
-                "origins": [
-                    "https://amanlms.vercel.app",
-                    "https://life-danagement-dashboard.vercel.app",
-
-                    "http://localhost:3000",
-                    "http://127.0.0.1:3000",
-                    "http://localhost:5000",
-                    "http://127.0.0.1:5000",
-                ]
-            }
-        },
-        supports_credentials=True,
-    )
+    app,
+    origins=[
+        "https://amanlms.vercel.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
     # -------------------------------------------------------------------------
     # Upload Folder
