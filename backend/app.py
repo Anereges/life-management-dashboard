@@ -1,37 +1,85 @@
 # backend/app.py
+
 import os
+import logging
+
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+
 from models import db
 from config import config
-import logging
 
-# Setup logging
-logging.basicConfig(level=logging.DEBUG)
+# -----------------------------------------------------------------------------
+# Logging
+# -----------------------------------------------------------------------------
+
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# -----------------------------------------------------------------------------
+# Extensions
+# -----------------------------------------------------------------------------
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
 migrate = Migrate()
 
-def create_app(config_name='development'):
-    app = Flask(__name__, static_folder='../frontend', static_url_path='')
+
+# -----------------------------------------------------------------------------
+# Application Factory
+# -----------------------------------------------------------------------------
+
+def create_app(config_name="production"):
+
+    app = Flask(
+        __name__,
+        static_folder="../frontend",
+        static_url_path=""
+    )
+
     app.config.from_object(config[config_name])
-    
+
     # Initialize extensions
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
-    CORS(app, supports_credentials=True, origins=['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
     migrate.init_app(app, db)
-    
-    # Create upload folder
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    
-    # Register blueprints
+
+    # -------------------------------------------------------------------------
+    # CORS
+    # -------------------------------------------------------------------------
+
+    CORS(
+        app,
+        resources={
+            r"/api/*": {
+                "origins": [
+                    "https://amanlms.vercel.app",
+                    "https://life-danagement-dashboard.vercel.app",
+
+                    "http://localhost:3000",
+                    "http://127.0.0.1:3000",
+                    "http://localhost:5000",
+                    "http://127.0.0.1:5000",
+                ]
+            }
+        },
+        supports_credentials=True,
+    )
+
+    # -------------------------------------------------------------------------
+    # Upload Folder
+    # -------------------------------------------------------------------------
+
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+    # -------------------------------------------------------------------------
+    # Import Blueprints
+    # -------------------------------------------------------------------------
+
     from routes.auth import auth_bp
     from routes.dashboard import dashboard_bp
     from routes.goals import goals_bp
@@ -45,52 +93,87 @@ def create_app(config_name='development'):
     from routes.values import values_bp
     from routes.knowledge import knowledge_bp
     from routes.reflection import reflection_bp
-    from routes.legacy_bot import legacy_bot_bp  # ADD THIS IMPORT
-    
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
-    app.register_blueprint(goals_bp, url_prefix='/api/goals')
-    app.register_blueprint(tasks_bp, url_prefix='/api/tasks')
-    app.register_blueprint(family_bp, url_prefix='/api/family')
-    app.register_blueprint(journal_bp, url_prefix='/api/journal')
-    app.register_blueprint(achievements_bp, url_prefix='/api/achievements')
-    app.register_blueprint(analytics_bp, url_prefix='/api/analytics')
-    app.register_blueprint(inspiration_bp, url_prefix='/api/inspiration')
-    app.register_blueprint(timeline_bp, url_prefix='/api/timeline')
-    app.register_blueprint(values_bp, url_prefix='/api/values')
-    app.register_blueprint(knowledge_bp, url_prefix='/api/knowledge')
-    app.register_blueprint(reflection_bp, url_prefix='/api/reflection')
-    app.register_blueprint(legacy_bot_bp, url_prefix='/api/legacy_bot')  # ADD THIS REGISTRATION
-    
-    @app.route('/')
-    def serve_frontend():
-        return send_from_directory('../frontend', 'index.html')
-    
-    @app.route('/health')
+    from routes.legacy_bot import legacy_bot_bp
+
+    # -------------------------------------------------------------------------
+    # Register Blueprints
+    # -------------------------------------------------------------------------
+
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
+    app.register_blueprint(goals_bp, url_prefix="/api/goals")
+    app.register_blueprint(tasks_bp, url_prefix="/api/tasks")
+    app.register_blueprint(family_bp, url_prefix="/api/family")
+    app.register_blueprint(journal_bp, url_prefix="/api/journal")
+    app.register_blueprint(achievements_bp, url_prefix="/api/achievements")
+    app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
+    app.register_blueprint(inspiration_bp, url_prefix="/api/inspiration")
+    app.register_blueprint(timeline_bp, url_prefix="/api/timeline")
+    app.register_blueprint(values_bp, url_prefix="/api/values")
+    app.register_blueprint(knowledge_bp, url_prefix="/api/knowledge")
+    app.register_blueprint(reflection_bp, url_prefix="/api/reflection")
+    app.register_blueprint(legacy_bot_bp, url_prefix="/api/legacy_bot")
+
+    # -------------------------------------------------------------------------
+    # Routes
+    # -------------------------------------------------------------------------
+
+    @app.route("/")
+    def index():
+        return jsonify({
+            "message": "Life Management Dashboard API",
+            "status": "running"
+        })
+
+    @app.route("/health")
     def health():
-        return jsonify({'status': 'healthy', 'version': app.config['VERSION']})
-    
-    # Error handlers
+        return jsonify({
+            "status": "healthy",
+            "version": app.config["VERSION"]
+        })
+
+    # -------------------------------------------------------------------------
+    # Error Handlers
+    # -------------------------------------------------------------------------
+
     @app.errorhandler(404)
-    def not_found(e):
-        return jsonify({'error': 'Not found'}), 404
-    
+    def not_found(error):
+        return jsonify({"error": "Not found"}), 404
+
     @app.errorhandler(422)
-    def handle_unprocessable_entity(e):
-        logger.error(f"422 Error: {str(e)}")
-        return jsonify({'error': 'Unprocessable Entity', 'message': str(e)}), 422
-    
+    def unprocessable(error):
+        logger.error(error)
+        return jsonify({
+            "error": "Unprocessable Entity",
+            "message": str(error)
+        }), 422
+
     @app.errorhandler(500)
-    def handle_internal_error(e):
-        logger.error(f"500 Error: {str(e)}")
-        return jsonify({'error': 'Internal Server Error', 'message': str(e)}), 500
-    
+    def internal(error):
+        logger.error(error)
+        return jsonify({
+            "error": "Internal Server Error",
+            "message": str(error)
+        }), 500
+
     return app
 
-if __name__ == '__main__':
-    app = create_app('development')
+
+# -----------------------------------------------------------------------------
+# Local Development
+# -----------------------------------------------------------------------------
+
+app = create_app("development")
+
+if __name__ == "__main__":
     with app.app_context():
         db.create_all()
         logger.info("✅ Database tables created")
-    logger.info("🚀 Starting Flask server on http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+    logger.info("🚀 Flask server started on http://localhost:5000")
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
