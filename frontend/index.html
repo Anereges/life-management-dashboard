@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Life Management Dashboard</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes/default.css">
+    
+    <style>
+        /* Additional inline styles for extra polish */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #FFFFFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            color: #FFFFFF;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+        
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 2px;
+            animation: loadProgress 2s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #F0F2F5;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5A4BD1 0%, #6C5CE7 100%);
+        }
+        
+        /* Dark Mode Scrollbar */
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #0D1117;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            padding: 16px 24px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-hover);
+            border-left: 4px solid var(--primary);
+            animation: slideInRight 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+        
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+        
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--danger); }
+        .toast.warning i { color: #F39C12; }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .toast-message {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .toast-close:hover {
+            color: var(--dark);
+            transform: rotate(90deg);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+        
+        .toast.exit {
+            animation: slideOutRight 0.5s ease forwards;
+        }
+
+        /* Dark Mode Toggle Styles */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--gray-light);
+            color: var(--dark);
+            transform: rotate(20deg);
+        }
+
+        .dark-mode .theme-toggle {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .theme-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+
+        .dark-mode .theme-toggle .fa-moon {
+            display: none;
+        }
+
+        .dark-mode .theme-toggle .fa-sun {
+            display: inline-block;
+        }
+
+        /* Smooth transitions for theme switching */
+        * {
+            transition: background-color 0.3s ease, 
+                        color 0.3s ease, 
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease,
+                        background 0.3s ease;
+        }
+
+        /* Dark mode specific overrides for inline styles */
+        .dark-mode .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .toast-message {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        .dark-mode .loading-screen {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .dark-mode .quote-wrapper {
+            background: rgba(108, 92, 231, 0.15);
+        }
+
+        .dark-mode .btn-glass {
+            background: rgba(28, 35, 51, 0.8);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .btn-glass:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .action-btn {
+            background: rgba(28, 35, 51, 0.5);
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .action-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .focus-item {
+            border-bottom-color: var(--border-color);
+        }
+
+        .dark-mode .achievement-item {
+            border-bottom-color: var(--border-color);
+        }
+
+        .dark-mode .focus-progress {
+            border-top-color: var(--border-color);
+        }
+
+        .dark-mode .achievements-total {
+            border-top-color: var(--border-color);
+        }
+
+        .dark-mode .nav-menu li a:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .nav-user {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .nav-user i {
+            color: var(--primary-light);
+        }
+
+        .dark-mode .logout-btn:hover {
+            background: rgba(218, 54, 51, 0.15);
+        }
+
+        .dark-mode .stat-trend.up {
+            background: rgba(46, 160, 67, 0.2);
+        }
+
+        .dark-mode .stat-trend.down {
+            background: rgba(218, 54, 51, 0.2);
+        }
+
+        .dark-mode .stat-info p {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .progress-bar {
+            background: var(--bg-tertiary);
+        }
+
+        .dark-mode .glass-card {
+            background: rgba(28, 35, 51, 0.85);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .dark-mode .datetime-wrapper {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .datetime-wrapper i {
+            color: var(--primary-light);
+        }
+
+        .dark-mode .greeting-text {
+            background: linear-gradient(135deg, #A29BFE 0%, #6C5CE7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark-mode .achievement-points {
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary-light);
+        }
+
+        .dark-mode .badge.gold {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .dark-mode .badge.silver {
+            background: rgba(192, 192, 192, 0.2);
+        }
+
+        .dark-mode .badge.bronze {
+            background: rgba(205, 127, 50, 0.2);
+        }
+
+        .dark-mode .achievement-icon.gold {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .dark-mode .achievement-icon.silver {
+            background: rgba(192, 192, 192, 0.2);
+        }
+
+        .dark-mode .achievement-icon.bronze {
+            background: rgba(205, 127, 50, 0.2);
+        }
+
+        .dark-mode .focus-tag.completed {
+            background: rgba(46, 160, 67, 0.2);
+        }
+
+        .dark-mode .focus-tag.in-progress {
+            background: rgba(253, 203, 110, 0.2);
+        }
+
+        .dark-mode .focus-tag.pending {
+            background: rgba(110, 118, 129, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Dashboard</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+    </div>
+
+    <div id="app">
+        <!-- Navigation -->
+        <nav id="navbar" role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-leaf"></i>
+                    <span>Life Dashboard</span>
+                    <span class="version-badge">v2.0</span>
+                </div>
+                
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#" data-page="dashboard" class="active" title="Dashboard">
+                        <i class="fas fa-home"></i> <span>Home</span>
+                    </a></li>
+                    <li><a href="#" data-page="family" title="Family">
+                        <i class="fas fa-users"></i> <span>Family</span>
+                    </a></li>
+                    <li><a href="#" data-page="goals" title="Goals">
+                        <i class="fas fa-bullseye"></i> <span>Goals</span>
+                    </a></li>
+                    <li><a href="#" data-page="tasks" title="Tasks">
+                        <i class="fas fa-tasks"></i> <span>Tasks</span>
+                    </a></li>
+                    <li><a href="#" data-page="journal" title="Journal">
+                        <i class="fas fa-book"></i> <span>Journal</span>
+                    </a></li>
+                    <li><a href="#" data-page="achievements" title="Achievements">
+                        <i class="fas fa-trophy"></i> <span>Achievements</span>
+                    </a></li>
+                    <li><a href="#" data-page="analytics" title="Analytics">
+                        <i class="fas fa-chart-line"></i> <span>Analytics</span>
+                    </a></li>
+                    <li><a href="#" data-page="timeline" title="Timeline">
+                        <i class="fas fa-clock"></i> <span>Timeline</span>
+                    </a></li>
+                    <li><a href="#" data-page="dreamtree" title="Dream Tree">
+                        <i class="fas fa-tree"></i> <span>Dream Tree</span>
+                    </a></li>
+                    <li><a href="#" data-page="inspiration" title="Inspiration">
+                        <i class="fas fa-heart"></i> <span>Inspiration</span>
+                    </a></li>
+                    <li><a href="#" data-page="legacybot" title="Legacy Bot">
+                        <i class="fas fa-robot"></i> <span>Legacy Bot</span>
+                    </a></li>
+                </ul>
+                
+                <div class="nav-user">
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    
+                    <div class="user-status">
+                        <span class="status-indicator online"></span>
+                        <i class="fas fa-user-circle"></i>
+                        <span id="username">Guest</span>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn tooltip" data-tooltip="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <div id="page-content"></div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- JavaScript -->
+    <script type="module" src="js/main.js"></script>
+    
+    <script>
+        // Loading screen handler
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Toast notification system
+        window.showToast = function(title, message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="${icons[type] || icons.info}"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Close button
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.add('exit');
+                setTimeout(() => toast.remove(), 500);
+            });
+            
+            // Auto dismiss
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.classList.add('exit');
+                    setTimeout(() => toast.remove(), 500);
+                }, duration);
+            }
+        };
+
+        // Navigation toggle
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('open');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.remove('open');
+            });
+        });
+
+        // ============================================
+        // DARK MODE TOGGLE - Full Implementation
+        // ============================================
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+            const bodyElement = document.body;
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Function to load dark theme CSS
+            function loadDarkTheme() {
+                let darkLink = document.getElementById('darkTheme');
+                if (!darkLink) {
+                    darkLink = document.createElement('link');
+                    darkLink.id = 'darkTheme';
+                    darkLink.rel = 'stylesheet';
+                    darkLink.href = 'css/themes/dark.css';
+                    document.head.appendChild(darkLink);
+                }
+            }
+            
+            // Function to remove dark theme CSS
+            function removeDarkTheme() {
+                const darkLink = document.getElementById('darkTheme');
+                if (darkLink) {
+                    darkLink.remove();
+                }
+            }
+            
+            // Function to update theme icon
+            function updateThemeIcon(isDark) {
+                const icon = themeToggle.querySelector('i');
+                // The CSS handles which icon is shown via display:none
+                // We just need to toggle the class
+                if (isDark) {
+                    htmlElement.classList.add('dark-mode');
+                    bodyElement.classList.add('dark-mode');
+                } else {
+                    htmlElement.classList.remove('dark-mode');
+                    bodyElement.classList.remove('dark-mode');
+                }
+            }
+            
+            // Apply saved theme
+            if (savedTheme === 'dark') {
+                htmlElement.classList.add('dark-mode');
+                bodyElement.classList.add('dark-mode');
+                loadDarkTheme();
+            }
+            
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', () => {
+                const isDark = htmlElement.classList.toggle('dark-mode');
+                bodyElement.classList.toggle('dark-mode');
+                
+                if (isDark) {
+                    loadDarkTheme();
+                    localStorage.setItem('theme', 'dark');
+                    showToast('Dark Mode', 'Switched to dark theme 🌙', 'success', 2000);
+                } else {
+                    removeDarkTheme();
+                    localStorage.setItem('theme', 'light');
+                    showToast('Light Mode', 'Switched to light theme ☀️', 'success', 2000);
+                }
+            });
+            
+            // System preference detection (only if no saved preference)
+            if (!localStorage.getItem('theme')) {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    htmlElement.classList.add('dark-mode');
+                    bodyElement.classList.add('dark-mode');
+                    loadDarkTheme();
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+            
+            // Listen for system theme changes (only if no saved preference)
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem('theme')) {
+                        if (e.matches) {
+                            htmlElement.classList.add('dark-mode');
+                            bodyElement.classList.add('dark-mode');
+                            loadDarkTheme();
+                        } else {
+                            htmlElement.classList.remove('dark-mode');
+                            bodyElement.classList.remove('dark-mode');
+                            removeDarkTheme();
+                        }
+                    }
+                });
+            }
+        })();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + K for search (placeholder)
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                showToast('Search', 'Search functionality coming soon!', 'info', 2000);
+            }
+            
+            // Ctrl + Shift + D for dark mode toggle
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                e.preventDefault();
+                document.getElementById('themeToggle').click();
+            }
+        });
+    </script>
+</body>
+</html>

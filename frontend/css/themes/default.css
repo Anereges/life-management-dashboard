@@ -1,0 +1,15 @@
+/* Default Theme - Warm & Motivational */
+:root {
+    --primary: #6C5CE7;
+    --primary-dark: #5A4BD1;
+    --primary-light: #A29BFE;
+    --secondary: #00CEC9;
+    --success: #00B894;
+    --warning: #FDCB6E;
+    --danger: #E17055;
+    --bg: #F0F2F5;
+    --card-bg: #FFFFFF;
+    --text-primary: #2D3436;
+    --text-secondary: #636E72;
+    --border: #DFE6E9;
+}
