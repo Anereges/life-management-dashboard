@@ -10,7 +10,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Config:
     # Use consistent secret keys - make sure these match!
-    SECRET_KEY = 'your-super-secret-key-minimum-32-characters-long-1234567890'
+    SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'dev-secret-key-change-this'
+)
     
     # Create database directory if it doesn't exist
     DB_DIR = os.path.join(BASE_DIR, 'database')
