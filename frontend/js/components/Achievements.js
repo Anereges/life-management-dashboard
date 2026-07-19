@@ -15,55 +15,56 @@ export class Achievements {
         this.deleteTargetId = null;
         this.isLoading = false;
         this.selectedCategory = null;
-        this.viewMode = 'grid'; // 'grid' | 'list'
+        this.viewMode = 'grid';
 
-        // Enhanced badge configuration
+        // Enhanced badge configuration with Unicode emojis (no JSX/HTML entities)
         this.badgeConfig = {
             'platinum': {
                 color: '#E5E4E2',
                 gradient: 'linear-gradient(135deg, #E5E4E2, #B8B8B8)',
-                icon: '??',
+                icon: '💎',
                 label: 'Platinum',
                 shadow: '0 4px 20px rgba(229, 228, 226, 0.4)'
             },
             'gold': {
                 color: '#FFD700',
                 gradient: 'linear-gradient(135deg, #FFD700, #F4A460)',
-                icon: '??',
+                icon: '🏆',
                 label: 'Gold',
                 shadow: '0 4px 20px rgba(255, 215, 0, 0.4)'
             },
             'silver': {
                 color: '#C0C0C0',
                 gradient: 'linear-gradient(135deg, #C0C0C0, #A8A8A8)',
-                icon: '??',
+                icon: '🥈',
                 label: 'Silver',
                 shadow: '0 4px 20px rgba(192, 192, 192, 0.4)'
             },
             'bronze': {
                 color: '#CD7F32',
                 gradient: 'linear-gradient(135deg, #CD7F32, #B8860B)',
-                icon: '??',
+                icon: '🥉',
                 label: 'Bronze',
                 shadow: '0 4px 20px rgba(205, 127, 50, 0.4)'
             }
         };
 
+        // Category icons with Unicode emojis
         this.categoryIcons = {
-            'Coding': '??',
-            'Career': '??',
-            'Learning': '??',
-            'Competition': '??',
-            'Personal': '??',
-            'General': '??',
-            'Other': '??',
-            'Health': '??',
-            'Finance': '??',
-            'Education': '??',
-            'Social': '??',
-            'Creative': '??',
-            'Leadership': '??',
-            'Technical': '?'
+            'Coding': '💻',
+            'Career': '💼',
+            'Learning': '📚',
+            'Competition': '🏅',
+            'Personal': '🧘',
+            'General': '🌟',
+            'Other': '🎯',
+            'Health': '💪',
+            'Finance': '💰',
+            'Education': '🎓',
+            'Social': '🤝',
+            'Creative': '🎨',
+            'Leadership': '👑',
+            'Technical': '⚙️'
         };
 
         this.categoryColors = {
@@ -91,7 +92,7 @@ export class Achievements {
             method: method,
             headers: {
                 'Authorization': `Bearer ${this.token}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json; charset=utf-8'
             }
         };
         
@@ -120,7 +121,7 @@ export class Achievements {
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('?? Network error. Please check your connection.', 'error');
+            this.showToast('Network error. Please check your connection.', 'error');
             return null;
         }
     }
@@ -132,14 +133,15 @@ export class Achievements {
         try {
             const response = await fetch(`${this.apiBase}/`, {
                 headers: {
-                    'Authorization': `Bearer ${this.token}`
+                    'Authorization': `Bearer ${this.token}`,
+                    'Accept': 'application/json; charset=utf-8'
                 }
             });
             
             if (response.ok) {
                 const data = await response.json();
                 this.achievements = data.map(a => this.transformAchievement(a));
-                console.log('? Achievements loaded:', this.achievements.length);
+                console.log('Achievements loaded:', this.achievements.length);
             } else if (response.status === 401) {
                 this.showToast('Session expired. Please login again.', 'error');
                 setTimeout(() => {
@@ -208,7 +210,7 @@ export class Achievements {
     }
 
     getIconForCategory(category) {
-        return this.categoryIcons[category] || '??';
+        return this.categoryIcons[category] || '🎯';
     }
 
     getCategoryColor(category) {
@@ -222,7 +224,6 @@ export class Achievements {
     // ============ RENDER ============
 
     async render() {
-        // Show loading state
         this.container = document.getElementById('page-content');
         this.container.innerHTML = this.renderLoadingState();
         
@@ -287,7 +288,7 @@ export class Achievements {
                 <div class="achievements-header-content">
                     <div>
                         <div class="achievements-badge">
-                            <span class="achievements-badge-icon">??</span>
+                            <span class="achievements-badge-icon">🏆</span>
                             <span class="achievements-badge-text">Hall of Fame</span>
                         </div>
                         <h1 class="achievements-title">
@@ -339,7 +340,7 @@ export class Achievements {
                         </div>
                         <div class="stat-content">
                             <span class="achievement-stat-number" style="color: #FFD700;">${favorites}</span>
-                            <span class="achievement-stat-label">? Favorites</span>
+                            <span class="achievement-stat-label">⭐ Favorites</span>
                         </div>
                     </div>
                     <div class="achievement-stat">
@@ -420,7 +421,7 @@ export class Achievements {
                             ${badges.map(badge => `
                                 <button class="filter-btn ${this.currentBadge === badge ? 'active' : ''}" 
                                         data-badge="${badge}">
-                                    ${badge === 'all' ? 'All' : `${this.badgeConfig[badge]?.icon || '??'} ${badge.charAt(0).toUpperCase() + badge.slice(1)}`}
+                                    ${badge === 'all' ? 'All' : `${this.badgeConfig[badge]?.icon || '💎'} ${badge.charAt(0).toUpperCase() + badge.slice(1)}`}
                                 </button>
                             `).join('')}
                         </div>
@@ -448,7 +449,7 @@ export class Achievements {
                     <span id="filterCount">${this.getFilteredAchievements().length} achievements</span>
                     ${this.searchQuery ? `<span class="filter-tag"><i class="fas fa-search"></i> "${this.searchQuery}"</span>` : ''}
                     ${this.currentCategory !== 'all' ? `<span class="filter-tag">${this.getIconForCategory(this.currentCategory)} ${this.currentCategory}</span>` : ''}
-                    ${this.currentBadge !== 'all' ? `<span class="filter-tag">${this.badgeConfig[this.currentBadge]?.icon || '??'} ${this.currentBadge}</span>` : ''}
+                    ${this.currentBadge !== 'all' ? `<span class="filter-tag">${this.badgeConfig[this.currentBadge]?.icon || '💎'} ${this.currentBadge}</span>` : ''}
                 </div>
             </div>
         `;
@@ -513,8 +514,8 @@ export class Achievements {
                     </div>
                 </div>
                 
-                <h3 class="achievement-title">${achievement.title}</h3>
-                <p class="achievement-description">${achievement.description || 'No description provided'}</p>
+                <h3 class="achievement-title">${this.escapeHtml(achievement.title)}</h3>
+                <p class="achievement-description">${achievement.description ? this.escapeHtml(achievement.description) : 'No description provided'}</p>
                 
                 <div class="achievement-meta">
                     <span class="achievement-category" style="background: ${categoryColor}20; color: ${categoryColor};">
@@ -558,13 +559,13 @@ export class Achievements {
                         ${achievement.icon}
                     </div>
                     <div class="list-item-content">
-                        <h4 class="list-item-title">${achievement.title}</h4>
-                        <p class="list-item-description">${achievement.description || 'No description'}</p>
+                        <h4 class="list-item-title">${this.escapeHtml(achievement.title)}</h4>
+                        <p class="list-item-description">${achievement.description ? this.escapeHtml(achievement.description) : 'No description'}</p>
                         <div class="list-item-meta">
                             <span class="list-item-category" style="color: ${categoryColor};">${achievement.icon} ${achievement.category}</span>
                             <span class="list-item-date"><i class="fas fa-calendar-alt"></i> ${achievement.date}</span>
                             <span class="list-item-badge" style="color: ${badgeConfig.color};">${badgeConfig.icon} ${badgeConfig.label}</span>
-                            <span class="list-item-points" style="color: ${badgeConfig.color};">? ${achievement.points} XP</span>
+                            <span class="list-item-points" style="color: ${badgeConfig.color};">⭐ ${achievement.points} XP</span>
                         </div>
                     </div>
                 </div>
@@ -590,7 +591,7 @@ export class Achievements {
     renderEmptyState() {
         return `
             <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                <div class="empty-state-icon">??</div>
+                <div class="empty-state-icon">🏆</div>
                 <h3 class="empty-state-title">No Achievements Yet</h3>
                 <p class="empty-state-subtitle">Start celebrating your wins by adding your first achievement!</p>
                 <button class="btn btn-primary btn-glow" id="achievementsEmptyAddBtn">
@@ -671,7 +672,7 @@ export class Achievements {
                             <div class="form-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="achievementsHallOfFameInput">
-                                    <span>?? Add to Hall of Fame</span>
+                                    <span>🏆 Add to Hall of Fame</span>
                                 </label>
                             </div>
                         </form>
@@ -728,7 +729,7 @@ export class Achievements {
                         </button>
                     </div>
                     <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                        <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
+                        <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
                         <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                         <p style="color: var(--gray); margin-bottom: 20px;">
                             This action cannot be undone. This will permanently delete this achievement.
@@ -782,18 +783,18 @@ export class Achievements {
                     <div class="achievement-details-icon" style="font-size: 3.5rem; text-align: center; margin-bottom: 12px;">
                         ${achievement.icon}
                     </div>
-                    <h2 class="achievement-details-title">${achievement.title}</h2>
+                    <h2 class="achievement-details-title">${this.escapeHtml(achievement.title)}</h2>
                     <div class="achievement-details-badges">
                         <span class="achievement-details-badge" style="background: ${badgeConfig.color}20; color: ${badgeConfig.color}; border-color: ${badgeConfig.color};">
                             ${badgeConfig.icon} ${badgeConfig.label}
                         </span>
-                        ${achievement.isFavorite ? '<span class="achievement-details-favorite">? Favorite</span>' : ''}
-                        ${achievement.is_hall_of_fame ? '<span class="achievement-details-hall">?? Hall of Fame</span>' : ''}
+                        ${achievement.isFavorite ? '<span class="achievement-details-favorite">⭐ Favorite</span>' : ''}
+                        ${achievement.is_hall_of_fame ? '<span class="achievement-details-hall">🏆 Hall of Fame</span>' : ''}
                     </div>
                 </div>
 
                 <div class="achievement-details-description">
-                    <p>${achievement.description || 'No description provided.'}</p>
+                    <p>${achievement.description ? this.escapeHtml(achievement.description) : 'No description provided.'}</p>
                 </div>
 
                 <div class="achievement-details-grid">
@@ -816,7 +817,7 @@ export class Achievements {
                     ${achievement.notes ? `
                         <div class="achievement-details-item" style="grid-column: 1 / -1;">
                             <span class="achievement-details-label"><i class="fas fa-sticky-note"></i> Notes</span>
-                            <span class="achievement-details-value">${achievement.notes}</span>
+                            <span class="achievement-details-value">${this.escapeHtml(achievement.notes)}</span>
                         </div>
                     ` : ''}
                 </div>
@@ -1005,7 +1006,6 @@ export class Achievements {
         if (modal) {
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
-            // Trigger animation
             const content = modal.querySelector('.modal-content');
             if (content) {
                 content.style.animation = 'none';
@@ -1041,7 +1041,7 @@ export class Achievements {
             this.closeDeleteModal();
             await this.loadAchievements();
             this.applyFilters();
-            this.showToast('??? Achievement deleted successfully', 'warning');
+            this.showToast('Achievement deleted successfully', 'warning');
         }
     }
 
@@ -1061,7 +1061,7 @@ export class Achievements {
             const input = document.getElementById('achievementsTitleInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('?? Please enter an achievement title', 'error');
+            this.showToast('Please enter an achievement title', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1085,12 +1085,12 @@ export class Achievements {
         if (this.editingAchievementId) {
             result = await this.apiRequest(`/${this.editingAchievementId}`, 'PUT', achievementData);
             if (result) {
-                this.showToast('? Achievement updated successfully!', 'success');
+                this.showToast('Achievement updated successfully!', 'success');
             }
         } else {
             result = await this.apiRequest('/', 'POST', achievementData);
             if (result) {
-                this.showToast('?? New achievement added! Celebrate your win!', 'success');
+                this.showToast('New achievement added! Celebrate your win!', 'success');
                 this.celebrateAchievement();
             }
         }
@@ -1116,7 +1116,7 @@ export class Achievements {
         if (result) {
             await this.loadAchievements();
             this.applyFilters();
-            this.showToast(newFavorite ? '? Added to favorites!' : '? Removed from favorites', 'info');
+            this.showToast(newFavorite ? 'Added to favorites!' : 'Removed from favorites', 'info');
         }
     }
 
@@ -1124,7 +1124,7 @@ export class Achievements {
         const achievement = this.achievements.find(a => a.id === id);
         if (!achievement) return;
 
-        const shareText = `?? Achievement Unlocked!\n\n${achievement.icon} ${achievement.title}\n${achievement.description || 'No description'}\n\n?? ${achievement.date}\n?? ${achievement.category}\n? ${achievement.points} XP\n?? ${achievement.badge.charAt(0).toUpperCase() + achievement.badge.slice(1)} Badge\n\n#AchievementUnlocked #LegacyJourney`;
+        const shareText = `🏆 Achievement Unlocked!\n\n${achievement.icon} ${achievement.title}\n${achievement.description || 'No description'}\n\n📅 ${achievement.date}\n📂 ${achievement.category}\n⭐ ${achievement.points} XP\n🏅 ${achievement.badge.charAt(0).toUpperCase() + achievement.badge.slice(1)} Badge\n\n#AchievementUnlocked #LegacyJourney`;
 
         if (navigator.share) {
             try {
@@ -1140,16 +1140,15 @@ export class Achievements {
         } else {
             try {
                 await navigator.clipboard.writeText(shareText);
-                this.showToast('?? Achievement copied to clipboard!', 'success');
+                this.showToast('Achievement copied to clipboard!', 'success');
             } catch (err) {
-                // Fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = shareText;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                this.showToast('?? Achievement copied to clipboard!', 'success');
+                this.showToast('Achievement copied to clipboard!', 'success');
             }
         }
     }
@@ -1162,7 +1161,6 @@ export class Achievements {
 
         const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#A29BFE', '#FD79A8'];
         
-        // Create confetti
         for (let i = 0; i < 50; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'celebration-confetti';
@@ -1187,7 +1185,6 @@ export class Achievements {
             setTimeout(() => confetti.remove(), 5000);
         }
 
-        // Add celebration styles if not exists
         if (!document.getElementById('celebrationStyles')) {
             const styles = document.createElement('style');
             styles.id = 'celebrationStyles';
@@ -1214,7 +1211,6 @@ export class Achievements {
             document.head.appendChild(styles);
         }
 
-        // Fire confetti effect
         if (typeof confetti !== 'undefined') {
             try {
                 confetti({
@@ -1227,6 +1223,13 @@ export class Achievements {
     }
 
     // ============ UI HELPERS ============
+
+    escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
     animateCards() {
         const cards = document.querySelectorAll('.stagger-item');
@@ -1265,12 +1268,10 @@ export class Achievements {
             this.showAddAchievementModal();
         });
 
-        // FAB button
         document.getElementById('achievementsFabBtn')?.addEventListener('click', () => {
             this.showAddAchievementModal();
         });
 
-        // View toggle
         document.querySelectorAll('.view-toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
@@ -1284,7 +1285,6 @@ export class Achievements {
             });
         });
 
-        // Search
         const searchInput = document.getElementById('achievementsSearchInput');
         const clearBtn = document.getElementById('searchClearBtn');
         
@@ -1306,7 +1306,6 @@ export class Achievements {
             }
         });
 
-        // Category filters
         document.querySelectorAll('#achievementsCategoryFilters .filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('#achievementsCategoryFilters .filter-btn').forEach(b => b.classList.remove('active'));
@@ -1316,7 +1315,6 @@ export class Achievements {
             });
         });
 
-        // Badge filters
         document.querySelectorAll('#achievementsBadgeFilters .filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('#achievementsBadgeFilters .filter-btn').forEach(b => b.classList.remove('active'));
@@ -1326,13 +1324,11 @@ export class Achievements {
             });
         });
 
-        // Sort select
         document.getElementById('achievementsSortSelect')?.addEventListener('change', (e) => {
             this.currentSort = e.target.value;
             this.applyFilters();
         });
 
-        // Clear filters
         document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
             this.currentCategory = 'all';
             this.currentBadge = 'all';
@@ -1354,7 +1350,6 @@ export class Achievements {
             this.showToast('Filters reset', 'info');
         });
 
-        // Modal close buttons
         document.getElementById('achievementsModalClose')?.addEventListener('click', () => this.closeAchievementModal());
         document.getElementById('achievementsModalCancelBtn')?.addEventListener('click', () => this.closeAchievementModal());
         document.getElementById('achievementsDetailsClose')?.addEventListener('click', () => this.closeDetailsModal());
@@ -1362,19 +1357,15 @@ export class Achievements {
         document.getElementById('achievementsDeleteClose')?.addEventListener('click', () => this.closeDeleteModal());
         document.getElementById('achievementsDeleteCancelBtn')?.addEventListener('click', () => this.closeDeleteModal());
 
-        // Delete confirm
         document.getElementById('achievementsDeleteConfirmBtn')?.addEventListener('click', () => this.confirmDelete());
 
-        // Save achievement
         document.getElementById('achievementsModalSaveBtn')?.addEventListener('click', () => this.saveAchievement());
 
-        // Toast close
         document.getElementById('toastCloseBtn')?.addEventListener('click', () => {
             const toast = document.getElementById('achievementsToast');
             if (toast) toast.classList.remove('show');
         });
 
-        // Click outside modals
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -1386,7 +1377,6 @@ export class Achievements {
             });
         });
 
-        // Achievement action delegation
         document.querySelector('#achievementsGrid')?.addEventListener('click', (e) => {
             const editBtn = e.target.closest('.achievements-edit');
             const deleteBtn = e.target.closest('.achievements-delete');
@@ -1420,16 +1410,13 @@ export class Achievements {
             }
         });
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            // Ctrl+K or / to focus search
             if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && !e.ctrlKey && !e.metaKey)) {
                 e.preventDefault();
                 const searchInput = document.getElementById('achievementsSearchInput');
                 if (searchInput) searchInput.focus();
             }
             
-            // Escape to close modals
             if (e.key === 'Escape') {
                 const modals = ['achievementsModal', 'achievementsDetailsModal', 'achievementsDeleteModal'];
                 for (const id of modals) {
@@ -1443,7 +1430,6 @@ export class Achievements {
                 }
             }
             
-            // 'a' to add new achievement
             if (e.key === 'a' && !e.ctrlKey && !e.metaKey && !e.altKey) {
                 const modal = document.getElementById('achievementsModal');
                 if (modal && modal.style.display === 'none') {
@@ -1463,7 +1449,6 @@ export class Achievements {
         const toastTitle = toast?.querySelector('.toast-title');
         
         if (toast && toastMessage) {
-            // Update icon and title based on type
             const configs = {
                 'success': { icon: 'fa-check-circle', title: 'Success' },
                 'error': { icon: 'fa-exclamation-circle', title: 'Error' },
@@ -1490,13 +1475,11 @@ export class Achievements {
                                           type === 'warning' ? 'var(--warning)' : 
                                           type === 'info' ? 'var(--primary)' : 'var(--success)';
             
-            // Auto hide after 3.5 seconds
             clearTimeout(this.toastTimeout);
             this.toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
             }, 3500);
         } else {
-            // Fallback
             if (window.showToast) {
                 window.showToast('Achievements', message, type, 2500);
             } else {
