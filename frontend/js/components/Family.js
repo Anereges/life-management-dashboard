@@ -333,7 +333,6 @@ export class Family {
         this.container = document.getElementById('page-content');
         this.container.innerHTML = `
             <div class="family-container">
-                <!-- Background Animation -->
                 <div class="family-bg-animation">
                     <div class="family-orb family-orb-1"></div>
                     <div class="family-orb family-orb-2"></div>
@@ -809,7 +808,7 @@ export class Family {
                                 <label>Upload Photos <span class="required">*</span></label>
                                 <div class="photo-drop-zone" id="familyPhotoDropZone">
                                     <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary);"></i>
-                                    <p><strong>Drag & drop your photos here</strong></p>
+                                    <p><strong>Drag and drop your photos here</strong></p>
                                     <p style="font-size: 0.85rem; color: var(--gray);">or click to browse</p>
                                     <p style="font-size: 0.75rem; color: var(--gray); margin-top: 8px;">
                                         <i class="fas fa-info-circle"></i> 
