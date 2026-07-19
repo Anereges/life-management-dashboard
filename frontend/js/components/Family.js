@@ -9,12 +9,11 @@ export class Family {
         this.token = localStorage.getItem('access_token');
         this.isLoading = false;
         this.uploadedPhotos = [];
-        this.maxFileSize = 5 * 1024 * 1024; // 5MB
+        this.maxFileSize = 5 * 1024 * 1024;
         this.allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'];
         this.maxPhotosPerUpload = 10;
         this.deleteTargetId = null;
         
-        // Image optimization settings
         this.imageSettings = {
             maxWidth: 1200,
             maxHeight: 1200,
@@ -24,19 +23,15 @@ export class Family {
         };
     }
 
-    // ============ IMAGE UTILITIES ============
-
     validateImage(file) {
         if (!this.allowedTypes.includes(file.type)) {
-            this.showToast(`📁 Unsupported file type: ${file.type}. Please upload JPEG, PNG, GIF, or WebP.`, 'error');
+            this.showToast('Unsupported file type. Please upload JPEG, PNG, GIF, or WebP.', 'error');
             return false;
         }
-
         if (file.size > this.maxFileSize) {
-            this.showToast(`📁 File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum size is 5MB.`, 'error');
+            this.showToast(`File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum size is 5MB.`, 'error');
             return false;
         }
-
         return true;
     }
 
@@ -149,8 +144,6 @@ export class Family {
         return ratio >= minRatio && ratio <= maxRatio;
     }
 
-    // ============ API METHODS ============
-
     async loadMembers() {
         if (this.isLoading) return;
         this.isLoading = true;
@@ -168,7 +161,6 @@ export class Family {
                     memories: []
                 }));
                 
-                // Load gallery for each member
                 for (let member of this.members) {
                     try {
                         const galleryResponse = await fetch(`${this.apiBase}/members/${member.id}/gallery`, {
@@ -188,8 +180,6 @@ export class Family {
                                 memberId: member.id,
                                 created_at: item.created_at
                             }));
-                            // Log successful load
-                            console.log(`📷 Loaded ${member.gallery.length} photos for ${member.name}`);
                         }
                     } catch (error) {
                         console.error(`Error loading gallery for ${member.name}:`, error);
@@ -267,16 +257,13 @@ export class Family {
                 return null;
             }
             
-            console.log('✅ API Response:', result);
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('🌐 Network error. Please try again.', 'error');
+            this.showToast('Network error. Please try again.', 'error');
             return null;
         }
     }
-
-    // ============ GALLERY ACTIONS ============
 
     async deleteGalleryPhoto(photoId, memberId) {
         if (!confirm('Are you sure you want to delete this photo?')) return;
@@ -290,15 +277,12 @@ export class Family {
             });
             
             if (response.ok) {
-                this.showToast('🗑️ Photo deleted successfully', 'success');
-                // Reload gallery
+                this.showToast('Photo deleted successfully', 'success');
                 const member = this.members.find(m => m.id === memberId);
                 if (member) {
                     const galleryData = await this.loadMemberGallery(memberId);
                     member.gallery = galleryData;
-                    // Refresh the gallery view
                     this.showGallery(memberId);
-                    // Update the member card count
                     this.updateMemberCardCount(memberId);
                 }
             } else {
@@ -307,23 +291,22 @@ export class Family {
             }
         } catch (error) {
             console.error('Error deleting photo:', error);
-            this.showToast('🌐 Network error. Please try again.', 'error');
+            this.showToast('Network error. Please try again.', 'error');
         }
     }
 
     async downloadPhoto(photoData, title) {
         try {
-            // Create a temporary link
             const link = document.createElement('a');
             link.href = photoData;
             link.download = `${title || 'family-photo'}.jpg`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            this.showToast('📥 Photo downloaded successfully!', 'success');
+            this.showToast('Photo downloaded successfully!', 'success');
         } catch (error) {
             console.error('Error downloading photo:', error);
-            this.showToast('❌ Error downloading photo', 'error');
+            this.showToast('Error downloading photo', 'error');
         }
     }
 
@@ -344,8 +327,6 @@ export class Family {
         }
     }
 
-    // ============ RENDER ============
-
     async render() {
         await this.loadMembers();
         
@@ -360,13 +341,9 @@ export class Family {
                     <div class="family-orb family-orb-4"></div>
                 </div>
 
-                <!-- Header -->
                 ${this.renderHeader()}
-                
-                <!-- Stats -->
                 ${this.renderStats()}
                 
-                <!-- Family Grid -->
                 <div class="family-grid">
                     ${this.members.length > 0 ? 
                         this.members.map((member, index) => this.renderMemberCard(member, index)).join('') :
@@ -374,7 +351,6 @@ export class Family {
                     }
                 </div>
 
-                <!-- All Modals -->
                 ${this.renderAddMemberModal()}
                 ${this.renderEditMemberModal()}
                 ${this.renderPhotoUploadModal()}
@@ -383,7 +359,6 @@ export class Family {
                 ${this.renderDeleteConfirmModal()}
                 ${this.renderToast()}
 
-                <!-- Floating Action Button -->
                 <button class="fab-btn" id="familyFabBtn" aria-label="Add Family Member">
                     <i class="fas fa-user-plus"></i>
                 </button>
@@ -400,15 +375,13 @@ export class Family {
         return this.container;
     }
 
-    // ============ RENDER HELPERS ============
-
     renderHeader() {
         return `
             <header class="family-header glass-card fade-in-up">
                 <div class="family-header-content">
                     <div>
                         <div class="family-badge">
-                            <span class="family-badge-icon">👨‍👩‍👧‍👦</span>
+                            <span class="family-badge-icon"><i class="fas fa-users"></i></span>
                             <span class="family-badge-text">Family Legacy</span>
                         </div>
                         <h1 class="family-title">Our Family <span class="family-title-highlight">Story</span></h1>
@@ -451,7 +424,7 @@ export class Family {
                         </div>
                         <div class="stat-content">
                             <span class="family-stat-number" style="color: #00B894;">${totalPhotos}</span>
-                            <span class="family-stat-label">📷 Photos</span>
+                            <span class="family-stat-label">Photos</span>
                         </div>
                     </div>
                     <div class="family-stat">
@@ -540,7 +513,7 @@ export class Family {
     renderEmptyState() {
         return `
             <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                <div class="empty-state-icon">👨‍👩‍👧‍👦</div>
+                <div class="empty-state-icon"><i class="fas fa-users" style="font-size: 4rem; color: var(--primary);"></i></div>
                 <h3 class="empty-state-title">No Family Members Yet</h3>
                 <p class="empty-state-subtitle">Start building your family legacy by adding your first family member!</p>
                 <button class="btn btn-primary btn-glow" id="emptyAddBtn">
@@ -549,8 +522,6 @@ export class Family {
             </div>
         `;
     }
-
-    // ============ MODAL RENDERING ============
 
     renderDeleteConfirmModal() {
         return `
@@ -567,7 +538,7 @@ export class Family {
                         </button>
                     </div>
                     <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                        <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
+                        <div style="font-size: 4rem; margin-bottom: 16px;"><i class="fas fa-trash" style="color: var(--danger);"></i></div>
                         <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                         <p style="color: var(--gray); margin-bottom: 20px;">
                             This action cannot be undone. This will permanently delete this photo.
@@ -847,12 +818,8 @@ export class Family {
                                     <input type="file" id="familyPhotoFile" accept="image/*" multiple>
                                 </div>
                                 
-                                <!-- Photo Preview Grid -->
-                                <div id="familyPhotoPreviewContainer" class="photo-preview-grid">
-                                    <!-- Dynamic previews will appear here -->
-                                </div>
+                                <div id="familyPhotoPreviewContainer" class="photo-preview-grid"></div>
                                 
-                                <!-- Upload Progress -->
                                 <div id="familyPhotoUploadProgress" class="upload-progress" style="display: none;">
                                     <div class="progress-bar">
                                         <div class="progress-fill" id="uploadProgressFill" style="width: 0%;"></div>
@@ -887,9 +854,7 @@ export class Family {
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <div class="modal-body" id="familyModalBody">
-                        <!-- Dynamic content -->
-                    </div>
+                    <div class="modal-body" id="familyModalBody"></div>
                 </div>
             </div>
         `;
@@ -909,9 +874,7 @@ export class Family {
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <div class="modal-body" id="familyGalleryBody">
-                        <!-- Dynamic content -->
-                    </div>
+                    <div class="modal-body" id="familyGalleryBody"></div>
                 </div>
             </div>
         `;
@@ -933,8 +896,6 @@ export class Family {
             </div>
         `;
     }
-
-    // ============ AGE CALCULATION ============
 
     setupAgeCalculation() {
         const birthdayInput = document.getElementById('familyMemberBirthdayInput');
@@ -966,8 +927,6 @@ export class Family {
             return age > 0 ? age : '';
         }
     }
-
-    // ============ PHOTO UPLOAD SETUP ============
 
     setupPhotoUpload() {
         const dropZone = document.getElementById('familyPhotoDropZone');
@@ -1012,7 +971,7 @@ export class Family {
         this.uploadedPhotos = [];
 
         if (files.length > this.maxPhotosPerUpload) {
-            this.showToast(`📁 Maximum ${this.maxPhotosPerUpload} photos allowed`, 'error');
+            this.showToast(`Maximum ${this.maxPhotosPerUpload} photos allowed`, 'error');
             return;
         }
 
@@ -1029,11 +988,11 @@ export class Family {
         }
 
         if (invalidFiles.length > 0) {
-            this.showToast(`⚠️ ${invalidFiles.length} file(s) skipped: ${invalidFiles.join(', ')}`, 'warning');
+            this.showToast(`${invalidFiles.length} file(s) skipped: ${invalidFiles.join(', ')}`, 'warning');
         }
 
         if (validFiles.length === 0) {
-            this.showToast('❌ No valid files to upload', 'error');
+            this.showToast('No valid files to upload', 'error');
             return;
         }
 
@@ -1050,7 +1009,7 @@ export class Family {
                 const dimensions = await this.getImageDimensions(file);
                 
                 if (!this.isValidAspectRatio(dimensions.width, dimensions.height)) {
-                    this.showToast(`⚠️ Image ${file.name} has unusual aspect ratio. Using as-is.`, 'warning');
+                    this.showToast(`Image ${file.name} has unusual aspect ratio. Using as-is.`, 'warning');
                 }
 
                 const optimized = await this.optimizeImage(file, {
@@ -1079,7 +1038,7 @@ export class Family {
 
             } catch (error) {
                 console.error('Error processing photo:', error);
-                this.showToast(`❌ Error processing ${file.name}`, 'error');
+                this.showToast(`Error processing ${file.name}`, 'error');
             }
         }
 
@@ -1096,7 +1055,7 @@ export class Family {
         }
 
         if (this.uploadedPhotos.length > 0) {
-            this.showToast(`✅ ${this.uploadedPhotos.length} photo(s) ready to upload`, 'success');
+            this.showToast(`${this.uploadedPhotos.length} photo(s) ready to upload`, 'success');
         }
     }
 
@@ -1139,7 +1098,7 @@ export class Family {
         }
 
         if (this.uploadedPhotos.length === 0) {
-            this.showToast('📷 All photos removed', 'info');
+            this.showToast('All photos removed', 'info');
         }
     }
 
@@ -1160,8 +1119,6 @@ export class Family {
         if (fill) fill.style.width = `${percentage}%`;
         if (textEl) textEl.textContent = text || `${Math.round(percentage)}%`;
     }
-
-    // ============ MEMBER PHOTO UPLOAD ============
 
     setupMemberPhotoUpload() {
         const uploadArea = document.getElementById('familyMemberPhotoUpload');
@@ -1193,10 +1150,10 @@ export class Family {
                         `;
                         preview.dataset.photo = optimized.dataUrl;
                         
-                        this.showToast('✅ Photo uploaded successfully', 'success');
+                        this.showToast('Photo uploaded successfully', 'success');
                     } catch (error) {
                         console.error('Error processing profile photo:', error);
-                        this.showToast('❌ Error processing photo', 'error');
+                        this.showToast('Error processing photo', 'error');
                         fileInput.value = '';
                     }
                 }
@@ -1232,18 +1189,16 @@ export class Family {
                         `;
                         editPreview.dataset.photo = optimized.dataUrl;
                         
-                        this.showToast('✅ Photo updated successfully', 'success');
+                        this.showToast('Photo updated successfully', 'success');
                     } catch (error) {
                         console.error('Error processing profile photo:', error);
-                        this.showToast('❌ Error processing photo', 'error');
+                        this.showToast('Error processing photo', 'error');
                         editFileInput.value = '';
                     }
                 }
             });
         }
     }
-
-    // ============ COLOR SELECTORS ============
 
     setupColorSelectors() {
         document.querySelectorAll('#familyColorSelector .color-option').forEach(option => {
@@ -1264,8 +1219,6 @@ export class Family {
             });
         });
     }
-
-    // ============ MEMBER CRUD ============
 
     showAddMemberModal() {
         document.getElementById('familyMemberNameInput').value = '';
@@ -1308,7 +1261,7 @@ export class Family {
             const input = document.getElementById('familyMemberNameInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('❌ Please enter a member name', 'error');
+            this.showToast('Please enter a member name', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1348,7 +1301,7 @@ export class Family {
             this.closeModal('familyAddMemberModal');
             await this.loadMembers();
             await this.render();
-            this.showToast(`🎉 Welcome to the family, ${name}!`, 'success');
+            this.showToast(`Welcome to the family, ${name}!`, 'success');
             this.celebrate();
         }
     }
@@ -1408,7 +1361,7 @@ export class Family {
             const input = document.getElementById('familyEditMemberNameInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('❌ Please enter a member name', 'error');
+            this.showToast('Please enter a member name', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1448,7 +1401,7 @@ export class Family {
             this.closeModal('familyEditMemberModal');
             await this.loadMembers();
             await this.render();
-            this.showToast(`✅ ${name}'s profile updated!`, 'success');
+            this.showToast(`${name}'s profile updated!`, 'success');
         }
     }
 
@@ -1462,11 +1415,9 @@ export class Family {
         if (result) {
             await this.loadMembers();
             await this.render();
-            this.showToast(`🗑️ ${member.name} removed from family`, 'warning');
+            this.showToast(`${member.name} removed from family`, 'warning');
         }
     }
-
-    // ============ PHOTO SAVE ============
 
     async savePhotos() {
         const memberId = parseInt(document.getElementById('familyUploadMemberSelect').value);
@@ -1475,21 +1426,21 @@ export class Family {
         const date = document.getElementById('familyPhotoDate').value;
 
         if (!memberId) {
-            this.showToast('❌ Please select a family member', 'error');
+            this.showToast('Please select a family member', 'error');
             document.getElementById('familyUploadMemberSelect').style.borderColor = 'var(--danger)';
             setTimeout(() => document.getElementById('familyUploadMemberSelect').style.borderColor = '', 2000);
             return;
         }
 
         if (!title) {
-            this.showToast('❌ Please enter a photo title', 'error');
+            this.showToast('Please enter a photo title', 'error');
             document.getElementById('familyPhotoTitle').style.borderColor = 'var(--danger)';
             setTimeout(() => document.getElementById('familyPhotoTitle').style.borderColor = '', 2000);
             return;
         }
 
         if (this.uploadedPhotos.length === 0) {
-            this.showToast('❌ Please select photos to upload', 'error');
+            this.showToast('Please select photos to upload', 'error');
             return;
         }
 
@@ -1549,24 +1500,21 @@ export class Family {
             document.getElementById('familyPhotoPreviewContainer').innerHTML = '';
             this.uploadedPhotos = [];
             
-            // Reload members to refresh gallery data
             await this.loadMembers();
             await this.render();
             
             const member = this.members.find(m => m.id === memberId);
-            this.showToast(`📷 ${uploaded} photo(s) added to ${member ? member.name : 'gallery'}!`, 'success');
+            this.showToast(`${uploaded} photo(s) added to ${member ? member.name : 'gallery'}!`, 'success');
             
             if (failed > 0) {
-                this.showToast(`⚠️ ${failed} photo(s) failed to upload`, 'warning');
+                this.showToast(`${failed} photo(s) failed to upload`, 'warning');
             }
             
             this.celebrate();
         } else {
-            this.showToast('❌ Failed to upload photos. Please try again.', 'error');
+            this.showToast('Failed to upload photos. Please try again.', 'error');
         }
     }
-
-    // ============ VIEW FUNCTIONS ============
 
     showMemberProfile(id) {
         const member = this.members.find(m => m.id === id);
@@ -1652,7 +1600,7 @@ export class Family {
                                         </div>
                                     </div>
                                 `).join('') :
-                                `<p class="profile-no-gallery">No photos yet. Upload some memories! 📷</p>`
+                                `<p class="profile-no-gallery">No photos yet. Upload some memories!</p>`
                             }
                             ${member.gallery && member.gallery.length > 6 ? 
                                 `<div class="profile-gallery-item profile-gallery-more" onclick="window.familyInstance?.showGallery(${member.id})">
@@ -1726,7 +1674,7 @@ export class Family {
                                     ${photo.description ? `<p>${photo.description}</p>` : ''}
                                     <small><i class="far fa-calendar-alt"></i> ${photo.date || 'No date'}</small>
                                     ${photo.width && photo.height ? 
-                                        `<small><i class="fas fa-arrows-alt"></i> ${photo.width} × ${photo.height}</small>` : ''
+                                        `<small><i class="fas fa-arrows-alt"></i> ${photo.width} x ${photo.height}</small>` : ''
                                     }
                                     ${photo.story ? `<p class="gallery-story"><i class="fas fa-quote-left"></i> ${photo.story}</p>` : ''}
                                     <div class="gallery-item-actions">
@@ -1752,18 +1700,16 @@ export class Family {
                 </div>
                 
                 <div class="gallery-stats">
-                    <span>📷 ${member.gallery ? member.gallery.length : 0} Photos</span>
-                    <span>📖 ${member.gallery ? member.gallery.filter(p => p.story).length : 0} Stories</span>
+                    <span><i class="fas fa-images"></i> ${member.gallery ? member.gallery.length : 0} Photos</span>
+                    <span><i class="fas fa-book"></i> ${member.gallery ? member.gallery.filter(p => p.story).length : 0} Stories</span>
                     ${member.gallery && member.gallery.length > 0 ? 
-                        `<span>🖼️ ${member.gallery.reduce((acc, p) => acc + (p.width || 0), 0)}px total</span>` : ''
+                        `<span><i class="fas fa-arrows-alt"></i> ${member.gallery.reduce((acc, p) => acc + (p.width || 0), 0)}px total</span>` : ''
                     }
                 </div>
             </div>
         `;
 
-        // Add event listeners for gallery actions
         setTimeout(() => {
-            // Download buttons
             body.querySelectorAll('.gallery-download').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1773,7 +1719,6 @@ export class Family {
                 });
             });
 
-            // Delete buttons
             body.querySelectorAll('.gallery-delete').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1786,8 +1731,6 @@ export class Family {
 
         this.openModal('familyGalleryModal');
     }
-
-    // ============ UI HELPERS ============
 
     openModal(id) {
         const modal = document.getElementById(id);
@@ -1813,22 +1756,18 @@ export class Family {
     }
 
     setupEventListeners() {
-        // Add Member
         document.getElementById('addMemberBtn')?.addEventListener('click', () => this.showAddMemberModal());
         document.getElementById('emptyAddBtn')?.addEventListener('click', () => this.showAddMemberModal());
         document.getElementById('familyFabBtn')?.addEventListener('click', () => this.showAddMemberModal());
 
-        // Add Member Modal
         document.getElementById('familyAddMemberClose')?.addEventListener('click', () => this.closeModal('familyAddMemberModal'));
         document.getElementById('familyAddMemberCancelBtn')?.addEventListener('click', () => this.closeModal('familyAddMemberModal'));
         document.getElementById('familyAddMemberSaveBtn')?.addEventListener('click', () => this.saveNewMember());
 
-        // Edit Member Modal
         document.getElementById('familyEditMemberClose')?.addEventListener('click', () => this.closeModal('familyEditMemberModal'));
         document.getElementById('familyEditMemberCancelBtn')?.addEventListener('click', () => this.closeModal('familyEditMemberModal'));
         document.getElementById('familyEditMemberSaveBtn')?.addEventListener('click', () => this.saveEditMember());
 
-        // Photo Upload Modal
         document.getElementById('uploadPhotoBtn')?.addEventListener('click', () => {
             document.getElementById('familyUploadMemberSelect').value = '';
             document.getElementById('familyPhotoTitle').value = '';
@@ -1845,34 +1784,26 @@ export class Family {
         document.getElementById('familyPhotoUploadCancelBtn')?.addEventListener('click', () => this.closeModal('familyPhotoUploadModal'));
         document.getElementById('familySavePhotoBtn')?.addEventListener('click', () => this.savePhotos());
 
-        // Profile Modal
         document.getElementById('familyModalClose')?.addEventListener('click', () => this.closeModal('familyMemberModal'));
-
-        // Gallery Modal
         document.getElementById('familyGalleryModalClose')?.addEventListener('click', () => this.closeModal('familyGalleryModal'));
 
-        // Toast Close
         document.getElementById('familyToastClose')?.addEventListener('click', () => {
             const toast = document.getElementById('familyToast');
             if (toast) toast.classList.remove('show');
         });
 
-        // Click outside modals
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     const id = modal.id;
-                    if (id === 'familyAddMemberModal') this.closeModal(id);
-                    else if (id === 'familyEditMemberModal') this.closeModal(id);
-                    else if (id === 'familyPhotoUploadModal') this.closeModal(id);
-                    else if (id === 'familyMemberModal') this.closeModal(id);
-                    else if (id === 'familyGalleryModal') this.closeModal(id);
-                    else if (id === 'familyDeleteConfirmModal') this.closeModal(id);
+                    if (['familyAddMemberModal', 'familyEditMemberModal', 'familyPhotoUploadModal', 
+                         'familyMemberModal', 'familyGalleryModal', 'familyDeleteConfirmModal'].includes(id)) {
+                        this.closeModal(id);
+                    }
                 }
             });
         });
 
-        // View Profile
         document.querySelectorAll('.view-profile').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1880,7 +1811,6 @@ export class Family {
             });
         });
 
-        // View Gallery
         document.querySelectorAll('.view-gallery').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
@@ -1890,14 +1820,12 @@ export class Family {
                 if (member) {
                     const galleryData = await this.loadMemberGallery(id);
                     member.gallery = galleryData;
-                    console.log(`📷 Opening gallery for ${member.name}:`, member.gallery);
                 }
                 
                 this.showGallery(id);
             });
         });
 
-        // Heart buttons
         document.querySelectorAll('.family-heart').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1907,18 +1835,16 @@ export class Family {
                 icon.style.transition = 'transform 0.3s ease';
                 setTimeout(() => { icon.style.transform = 'scale(1)'; }, 300);
                 const member = this.members.find(m => m.id === parseInt(btn.dataset.id));
-                this.showToast(`💖 Sending love to ${member ? member.name : 'your family member'}!`, 'success');
+                this.showToast(`Sending love to ${member ? member.name : 'your family member'}!`, 'success');
             });
         });
 
-        // Card click
         document.querySelectorAll('.family-card').forEach(card => {
             card.addEventListener('click', () => {
                 this.showMemberProfile(parseInt(card.dataset.id));
             });
         });
 
-        // Edit/Delete in profile (event delegation)
         document.getElementById('familyMemberModal')?.addEventListener('click', (e) => {
             const editBtn = e.target.closest('.edit-member-btn');
             if (editBtn) {
@@ -1934,7 +1860,6 @@ export class Family {
             }
         });
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 if (document.getElementById('familyAddMemberModal').style.display !== 'none') {
