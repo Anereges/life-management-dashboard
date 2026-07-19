@@ -28,12 +28,12 @@ export class Family {
 
     validateImage(file) {
         if (!this.allowedTypes.includes(file.type)) {
-            this.showToast(`? Unsupported file type: ${file.type}. Please upload JPEG, PNG, GIF, or WebP.`, 'error');
+            this.showToast(`📁 Unsupported file type: ${file.type}. Please upload JPEG, PNG, GIF, or WebP.`, 'error');
             return false;
         }
 
         if (file.size > this.maxFileSize) {
-            this.showToast(`? File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum size is 5MB.`, 'error');
+            this.showToast(`📁 File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum size is 5MB.`, 'error');
             return false;
         }
 
@@ -168,6 +168,7 @@ export class Family {
                     memories: []
                 }));
                 
+                // Load gallery for each member
                 for (let member of this.members) {
                     try {
                         const galleryResponse = await fetch(`${this.apiBase}/members/${member.id}/gallery`, {
@@ -177,16 +178,18 @@ export class Family {
                             const galleryData = await galleryResponse.json();
                             member.gallery = galleryData.map(item => ({
                                 id: item.id,
-                                title: item.title,
-                                description: item.description,
-                                photo: item.media_url,
-                                date: item.date,
-                                story: item.description,
+                                title: item.title || item.photo_title || 'Untitled',
+                                description: item.description || item.photo_description || '',
+                                photo: item.media_url || item.photo_url || item.photo || null,
+                                date: item.date || item.photo_date || new Date().toISOString().split('T')[0],
+                                story: item.description || item.story || '',
                                 width: item.width || null,
                                 height: item.height || null,
-                                memberId: member.id
+                                memberId: member.id,
+                                created_at: item.created_at
                             }));
-                            console.log(`?? Loaded ${member.gallery.length} photos for ${member.name}`);
+                            // Log successful load
+                            console.log(`📷 Loaded ${member.gallery.length} photos for ${member.name}`);
                         }
                     } catch (error) {
                         console.error(`Error loading gallery for ${member.name}:`, error);
@@ -217,14 +220,15 @@ export class Family {
                 const data = await response.json();
                 return data.map(item => ({
                     id: item.id,
-                    title: item.title,
-                    description: item.description,
-                    photo: item.media_url,
-                    date: item.date,
-                    story: item.description,
+                    title: item.title || item.photo_title || 'Untitled',
+                    description: item.description || item.photo_description || '',
+                    photo: item.media_url || item.photo_url || item.photo || null,
+                    date: item.date || item.photo_date || new Date().toISOString().split('T')[0],
+                    story: item.description || item.story || '',
                     width: item.width || null,
                     height: item.height || null,
-                    memberId: memberId
+                    memberId: memberId,
+                    created_at: item.created_at
                 }));
             }
             return [];
@@ -263,11 +267,11 @@ export class Family {
                 return null;
             }
             
-            console.log('? API Response:', result);
+            console.log('✅ API Response:', result);
             return result;
         } catch (error) {
             console.error('API Error:', error);
-            this.showToast('?? Network error. Please try again.', 'error');
+            this.showToast('🌐 Network error. Please try again.', 'error');
             return null;
         }
     }
@@ -286,7 +290,7 @@ export class Family {
             });
             
             if (response.ok) {
-                this.showToast('??? Photo deleted successfully', 'success');
+                this.showToast('🗑️ Photo deleted successfully', 'success');
                 // Reload gallery
                 const member = this.members.find(m => m.id === memberId);
                 if (member) {
@@ -303,7 +307,7 @@ export class Family {
             }
         } catch (error) {
             console.error('Error deleting photo:', error);
-            this.showToast('?? Network error. Please try again.', 'error');
+            this.showToast('🌐 Network error. Please try again.', 'error');
         }
     }
 
@@ -316,10 +320,10 @@ export class Family {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            this.showToast('?? Photo downloaded successfully!', 'success');
+            this.showToast('📥 Photo downloaded successfully!', 'success');
         } catch (error) {
             console.error('Error downloading photo:', error);
-            this.showToast('?? Error downloading photo', 'error');
+            this.showToast('❌ Error downloading photo', 'error');
         }
     }
 
@@ -404,7 +408,7 @@ export class Family {
                 <div class="family-header-content">
                     <div>
                         <div class="family-badge">
-                            <span class="family-badge-icon">???????????</span>
+                            <span class="family-badge-icon">👨‍👩‍👧‍👦</span>
                             <span class="family-badge-text">Family Legacy</span>
                         </div>
                         <h1 class="family-title">Our Family <span class="family-title-highlight">Story</span></h1>
@@ -447,7 +451,7 @@ export class Family {
                         </div>
                         <div class="stat-content">
                             <span class="family-stat-number" style="color: #00B894;">${totalPhotos}</span>
-                            <span class="family-stat-label">?? Photos</span>
+                            <span class="family-stat-label">📷 Photos</span>
                         </div>
                     </div>
                     <div class="family-stat">
@@ -536,7 +540,7 @@ export class Family {
     renderEmptyState() {
         return `
             <div class="empty-state glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px 40px;">
-                <div class="empty-state-icon">???????????</div>
+                <div class="empty-state-icon">👨‍👩‍👧‍👦</div>
                 <h3 class="empty-state-title">No Family Members Yet</h3>
                 <p class="empty-state-subtitle">Start building your family legacy by adding your first family member!</p>
                 <button class="btn btn-primary btn-glow" id="emptyAddBtn">
@@ -563,7 +567,7 @@ export class Family {
                         </button>
                     </div>
                     <div class="modal-body" style="text-align: center; padding: 30px 20px;">
-                        <div style="font-size: 4rem; margin-bottom: 16px;">???</div>
+                        <div style="font-size: 4rem; margin-bottom: 16px;">🗑️</div>
                         <h4 style="margin-bottom: 8px; color: var(--dark);">Are you sure?</h4>
                         <p style="color: var(--gray); margin-bottom: 20px;">
                             This action cannot be undone. This will permanently delete this photo.
@@ -1008,7 +1012,7 @@ export class Family {
         this.uploadedPhotos = [];
 
         if (files.length > this.maxPhotosPerUpload) {
-            this.showToast(`?? Maximum ${this.maxPhotosPerUpload} photos allowed`, 'error');
+            this.showToast(`📁 Maximum ${this.maxPhotosPerUpload} photos allowed`, 'error');
             return;
         }
 
@@ -1025,11 +1029,11 @@ export class Family {
         }
 
         if (invalidFiles.length > 0) {
-            this.showToast(`?? ${invalidFiles.length} file(s) skipped: ${invalidFiles.join(', ')}`, 'warning');
+            this.showToast(`⚠️ ${invalidFiles.length} file(s) skipped: ${invalidFiles.join(', ')}`, 'warning');
         }
 
         if (validFiles.length === 0) {
-            this.showToast('?? No valid files to upload', 'error');
+            this.showToast('❌ No valid files to upload', 'error');
             return;
         }
 
@@ -1046,7 +1050,7 @@ export class Family {
                 const dimensions = await this.getImageDimensions(file);
                 
                 if (!this.isValidAspectRatio(dimensions.width, dimensions.height)) {
-                    this.showToast(`?? Image ${file.name} has unusual aspect ratio. Using as-is.`, 'warning');
+                    this.showToast(`⚠️ Image ${file.name} has unusual aspect ratio. Using as-is.`, 'warning');
                 }
 
                 const optimized = await this.optimizeImage(file, {
@@ -1075,7 +1079,7 @@ export class Family {
 
             } catch (error) {
                 console.error('Error processing photo:', error);
-                this.showToast(`? Error processing ${file.name}`, 'error');
+                this.showToast(`❌ Error processing ${file.name}`, 'error');
             }
         }
 
@@ -1092,7 +1096,7 @@ export class Family {
         }
 
         if (this.uploadedPhotos.length > 0) {
-            this.showToast(`? ${this.uploadedPhotos.length} photo(s) ready to upload`, 'success');
+            this.showToast(`✅ ${this.uploadedPhotos.length} photo(s) ready to upload`, 'success');
         }
     }
 
@@ -1135,7 +1139,7 @@ export class Family {
         }
 
         if (this.uploadedPhotos.length === 0) {
-            this.showToast('?? All photos removed', 'info');
+            this.showToast('📷 All photos removed', 'info');
         }
     }
 
@@ -1189,10 +1193,10 @@ export class Family {
                         `;
                         preview.dataset.photo = optimized.dataUrl;
                         
-                        this.showToast('? Photo uploaded successfully', 'success');
+                        this.showToast('✅ Photo uploaded successfully', 'success');
                     } catch (error) {
                         console.error('Error processing profile photo:', error);
-                        this.showToast('? Error processing photo', 'error');
+                        this.showToast('❌ Error processing photo', 'error');
                         fileInput.value = '';
                     }
                 }
@@ -1228,10 +1232,10 @@ export class Family {
                         `;
                         editPreview.dataset.photo = optimized.dataUrl;
                         
-                        this.showToast('? Photo updated successfully', 'success');
+                        this.showToast('✅ Photo updated successfully', 'success');
                     } catch (error) {
                         console.error('Error processing profile photo:', error);
-                        this.showToast('? Error processing photo', 'error');
+                        this.showToast('❌ Error processing photo', 'error');
                         editFileInput.value = '';
                     }
                 }
@@ -1304,7 +1308,7 @@ export class Family {
             const input = document.getElementById('familyMemberNameInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('?? Please enter a member name', 'error');
+            this.showToast('❌ Please enter a member name', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1344,7 +1348,7 @@ export class Family {
             this.closeModal('familyAddMemberModal');
             await this.loadMembers();
             await this.render();
-            this.showToast(`?? Welcome to the family, ${name}!`, 'success');
+            this.showToast(`🎉 Welcome to the family, ${name}!`, 'success');
             this.celebrate();
         }
     }
@@ -1404,7 +1408,7 @@ export class Family {
             const input = document.getElementById('familyEditMemberNameInput');
             input.style.borderColor = 'var(--danger)';
             input.classList.add('shake');
-            this.showToast('?? Please enter a member name', 'error');
+            this.showToast('❌ Please enter a member name', 'error');
             setTimeout(() => {
                 input.style.borderColor = '';
                 input.classList.remove('shake');
@@ -1444,7 +1448,7 @@ export class Family {
             this.closeModal('familyEditMemberModal');
             await this.loadMembers();
             await this.render();
-            this.showToast(`? ${name}'s profile updated!`, 'success');
+            this.showToast(`✅ ${name}'s profile updated!`, 'success');
         }
     }
 
@@ -1458,7 +1462,7 @@ export class Family {
         if (result) {
             await this.loadMembers();
             await this.render();
-            this.showToast(`??? ${member.name} removed from family`, 'warning');
+            this.showToast(`🗑️ ${member.name} removed from family`, 'warning');
         }
     }
 
@@ -1471,21 +1475,21 @@ export class Family {
         const date = document.getElementById('familyPhotoDate').value;
 
         if (!memberId) {
-            this.showToast('?? Please select a family member', 'error');
+            this.showToast('❌ Please select a family member', 'error');
             document.getElementById('familyUploadMemberSelect').style.borderColor = 'var(--danger)';
             setTimeout(() => document.getElementById('familyUploadMemberSelect').style.borderColor = '', 2000);
             return;
         }
 
         if (!title) {
-            this.showToast('?? Please enter a photo title', 'error');
+            this.showToast('❌ Please enter a photo title', 'error');
             document.getElementById('familyPhotoTitle').style.borderColor = 'var(--danger)';
             setTimeout(() => document.getElementById('familyPhotoTitle').style.borderColor = '', 2000);
             return;
         }
 
         if (this.uploadedPhotos.length === 0) {
-            this.showToast('?? Please select photos to upload', 'error');
+            this.showToast('❌ Please select photos to upload', 'error');
             return;
         }
 
@@ -1545,19 +1549,20 @@ export class Family {
             document.getElementById('familyPhotoPreviewContainer').innerHTML = '';
             this.uploadedPhotos = [];
             
+            // Reload members to refresh gallery data
             await this.loadMembers();
             await this.render();
             
             const member = this.members.find(m => m.id === memberId);
-            this.showToast(`?? ${uploaded} photo(s) added to ${member ? member.name : 'gallery'}!`, 'success');
+            this.showToast(`📷 ${uploaded} photo(s) added to ${member ? member.name : 'gallery'}!`, 'success');
             
             if (failed > 0) {
-                this.showToast(`?? ${failed} photo(s) failed to upload`, 'warning');
+                this.showToast(`⚠️ ${failed} photo(s) failed to upload`, 'warning');
             }
             
             this.celebrate();
         } else {
-            this.showToast('? Failed to upload photos. Please try again.', 'error');
+            this.showToast('❌ Failed to upload photos. Please try again.', 'error');
         }
     }
 
@@ -1647,7 +1652,7 @@ export class Family {
                                         </div>
                                     </div>
                                 `).join('') :
-                                `<p class="profile-no-gallery">No photos yet. Upload some memories! ??</p>`
+                                `<p class="profile-no-gallery">No photos yet. Upload some memories! 📷</p>`
                             }
                             ${member.gallery && member.gallery.length > 6 ? 
                                 `<div class="profile-gallery-item profile-gallery-more" onclick="window.familyInstance?.showGallery(${member.id})">
@@ -1721,7 +1726,7 @@ export class Family {
                                     ${photo.description ? `<p>${photo.description}</p>` : ''}
                                     <small><i class="far fa-calendar-alt"></i> ${photo.date || 'No date'}</small>
                                     ${photo.width && photo.height ? 
-                                        `<small><i class="fas fa-arrows-alt"></i> ${photo.width} � ${photo.height}</small>` : ''
+                                        `<small><i class="fas fa-arrows-alt"></i> ${photo.width} × ${photo.height}</small>` : ''
                                     }
                                     ${photo.story ? `<p class="gallery-story"><i class="fas fa-quote-left"></i> ${photo.story}</p>` : ''}
                                     <div class="gallery-item-actions">
@@ -1747,10 +1752,10 @@ export class Family {
                 </div>
                 
                 <div class="gallery-stats">
-                    <span>?? ${member.gallery ? member.gallery.length : 0} Photos</span>
-                    <span>?? ${member.gallery ? member.gallery.filter(p => p.story).length : 0} Stories</span>
+                    <span>📷 ${member.gallery ? member.gallery.length : 0} Photos</span>
+                    <span>📖 ${member.gallery ? member.gallery.filter(p => p.story).length : 0} Stories</span>
                     ${member.gallery && member.gallery.length > 0 ? 
-                        `<span>??? ${member.gallery.reduce((acc, p) => acc + (p.width || 0), 0)}px total</span>` : ''
+                        `<span>🖼️ ${member.gallery.reduce((acc, p) => acc + (p.width || 0), 0)}px total</span>` : ''
                     }
                 </div>
             </div>
@@ -1885,7 +1890,7 @@ export class Family {
                 if (member) {
                     const galleryData = await this.loadMemberGallery(id);
                     member.gallery = galleryData;
-                    console.log(`?? Opening gallery for ${member.name}:`, member.gallery);
+                    console.log(`📷 Opening gallery for ${member.name}:`, member.gallery);
                 }
                 
                 this.showGallery(id);
@@ -1902,7 +1907,7 @@ export class Family {
                 icon.style.transition = 'transform 0.3s ease';
                 setTimeout(() => { icon.style.transform = 'scale(1)'; }, 300);
                 const member = this.members.find(m => m.id === parseInt(btn.dataset.id));
-                this.showToast(`?? Sending love to ${member ? member.name : 'your family member'}!`, 'success');
+                this.showToast(`💖 Sending love to ${member ? member.name : 'your family member'}!`, 'success');
             });
         });
 
